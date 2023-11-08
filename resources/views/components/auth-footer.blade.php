@@ -1,3 +1,3 @@
   <div class="simple-footer">
-      Copyright &copy; Stisla 2018
+      Copyright &copy; <span id="currentYear"></span> - PT BPR Arthaya Indotama Pusaka
   </div>
