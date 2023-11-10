@@ -14,7 +14,8 @@
         </div>
 
         <div class="card-body">
-            <form method="POST" action="#" class="needs-validation" novalidate="">
+            <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate="">
+                @csrf
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input id="email" type="email" class="form-control" name="email" tabindex="1" required
@@ -38,13 +39,6 @@
                         please fill in your password
                     </div>
                 </div>
-
-                {{-- <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" name="remember" class="custom-control-input" tabindex="3" id="remember-me">
-                        <label class="custom-control-label" for="remember-me">Remember Me</label>
-                    </div>
-                </div> --}}
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">

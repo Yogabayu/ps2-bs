@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>@yield('title') &mdash; Stisla</title>
+    <title>@yield('title') &mdash; P2 &mdash; BS</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('stisla/library/bootstrap/dist/css/bootstrap.min.css') }}">
@@ -54,6 +54,7 @@
     </div>
 
     <!-- General JS Scripts -->
+    @include('sweetalert::alert')
     <script src="{{ asset('stisla/library/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('stisla/library/popper.js/dist/umd/popper.js') }}"></script>
     <script src="{{ asset('stisla/library/tooltip.js/dist/umd/tooltip.js') }}"></script>
@@ -67,6 +68,12 @@
     <!-- Template JS File -->
     <script src="{{ asset('stisla/js/scripts.js') }}"></script>
     <script src="{{ asset('stisla/js/custom.js') }}"></script>
+    <script>
+        // Auto-close the alert messages after 3 seconds (3000 milliseconds)
+        setTimeout(function() {
+            $('.swal2-popup').fadeOut();
+        }, 3000);
+    </script>
 </body>
 
 </html>

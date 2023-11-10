@@ -3130,7 +3130,7 @@ body.sidebar-mini .main-sidebar .sidebar-menu > li > a .badge {
 body.sidebar-mini .main-sidebar .sidebar-menu > li > a.has-dropdown:after {
   content: initial;
 }
-body.sidebar-mini .main-sidebar .sidebar-menu > li.active > a {
+body.sidebar-mini .main-sidebar .sidebar-menu > li > a.active {
   box-shadow: 0 4px 8px #acb5f6;
   background-color: #6777ef;
   color: #fff;

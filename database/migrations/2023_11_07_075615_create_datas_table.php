@@ -13,16 +13,22 @@ return new class extends Migration
     {
         Schema::create('datas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_uuid');
+            $table->uuid('user_uuid');
             $table->unsignedBigInteger('transc_id');
             $table->unsignedBigInteger('place_transc_id');
             $table->date('date');
             $table->time('start');
             $table->time('end');
+            $table->string('evidence_file');
             $table->integer('nominal');
             $table->string('customer_name');
             $table->integer('result')->comment("1=sesuai,2=tdk sesuai");
+            $table->boolean("isActive")->comment("untuk patokan transaksi aktif atau tidak");
             $table->timestamps();
+
+            $table->foreign('user_uuid')->references('uuid')->on('users');
+            $table->foreign('transc_id')->references('id')->on('transactions');
+            $table->foreign('place_transc_id')->references('id')->on('place_transcs');
         });
     }
 
