@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Tambah User')
+@section('title', 'Edit User')
 
 @push('style')
 @endpush

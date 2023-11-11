@@ -100,12 +100,12 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('stisla/library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
     <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script>
-    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script>
         function confirmDelete(deleteUrl) {
             Swal.fire({

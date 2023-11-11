@@ -1,15 +1,17 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Add Office')
+@section('title', 'Tambah Kantor')
 
 @push('style')
 @endpush
-//TODO: controller masih kosong
 @section('main')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Add Office</h1>
+                <a href="{{ route('office.index') }}">
+                    <button class="btn btn-secondary mr-2"> <i class="fas fa-arrow-left mr-2"></i></button>
+                </a>
+                <h1>Tambah Kantor</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="{{ url('/dashboard') }}">Dashboard</a></div>
                     <div class="breadcrumb-item"><a href="{{ route('office.index') }}">Office</a></div>
@@ -20,13 +22,13 @@
             <div class="section-body">
                 <div class="row">
                     <div class="col-12 col-md-12 col-lg-12">
-                        <form action="{{ route('user.store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('office.store') }}" method="post">
                             @csrf
                             @method('post')
                             <div class="card">
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Code</label>
+                                        <label>Kode Kantor</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">

@@ -3,6 +3,14 @@
 @section('title', 'User')
 
 @push('style')
+    <!-- CSS Libraries -->
+    {{-- <link rel="stylesheet"
+        href="assets/modules/datatables/datatables.min.css">
+    <link rel="stylesheet"
+        href="assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet"
+        href="assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css"> --}}
+
     <link rel="stylesheet" href="{{ asset('stisla/library/datatables/media/css/jquery.dataTables.min.css') }}">
 @endpush
 
@@ -55,12 +63,13 @@
                                                         {{ $data->users_count }}
                                                     </td>
                                                     <td>
-                                                        <a href="#" class="btn btn-info btn-sm" title="Edit">
+                                                        <a href="{{ route('office.edit', $data->id) }}"
+                                                            class="btn btn-info btn-sm" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
 
                                                         <button class="btn btn-danger btn-sm" title="Delete"
-                                                            onclick="confirmDelete('#')">
+                                                            onclick="confirmDelete('{{ route('office.destroy', $data->id) }}')">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </td>
@@ -80,12 +89,12 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('stisla/library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
     <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script>
-    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script>
         function confirmDelete(deleteUrl) {
             Swal.fire({
@@ -93,11 +102,12 @@
                 text: 'Data yang dihapus tidak dapat dipulihkan',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '
+                confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Ya, lanjutkan !'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // If the user clicks "Yes," submit the form
                     var form = document.createElement('form');
                     form.action = deleteUrl;
                     form.method = 'POST';
@@ -105,11 +115,13 @@
 
                     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+                    // Append CSRF token to the form
                     var csrfInput = document.createElement('input');
                     csrfInput.name = '_token';
                     csrfInput.value = csrfToken;
                     form.appendChild(csrfInput);
 
+                    // Append a method spoofing input for DELETE request
                     var methodInput = document.createElement('input');
                     methodInput.name = '_method';
                     methodInput.value = 'DELETE';

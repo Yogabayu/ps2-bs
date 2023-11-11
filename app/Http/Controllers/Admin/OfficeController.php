@@ -32,7 +32,7 @@ class OfficeController extends Controller
      */
     public function create()
     {
-         return view('pages.admin.office.action.insert');
+        return view('pages.admin.office.action.insert');
     }
 
     /**
@@ -40,7 +40,23 @@ class OfficeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'code' => "required",
+                'name' => "required"
+            ]);
+
+            $office = new Office();
+            $office->code = $request->code;
+            $office->name = $request->name;
+            $office->save();
+
+            Alert::toast('Sukses menambah kantor', 'success');
+            return redirect()->route('office.index');
+        } catch (\Exception $e) {
+            Alert::error($e->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -48,7 +64,6 @@ class OfficeController extends Controller
      */
     public function show(string $id)
     {
-        //
     }
 
     /**
@@ -56,15 +71,35 @@ class OfficeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $data = Office::find($id);
+
+            return view('pages.admin.office.action.update', [
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            Alert::error($e->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $office = Office::find($id);
+            $office->code = $request->code;
+            $office->name = $request->name;
+            $office->save();
+
+            Alert::toast('Sukses update data kantor', 'success');
+            return redirect()->route('office.index');
+        } catch (\Exception $e) {
+            Alert::error($e->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -72,6 +107,15 @@ class OfficeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $del = Office::find($id);
+            $del->delete();
+
+            Alert::toast('Sukses menghapus kantor', 'success');
+            return redirect()->route('office.index');
+        } catch (\Exception $e) {
+            Alert::error($e->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 }
