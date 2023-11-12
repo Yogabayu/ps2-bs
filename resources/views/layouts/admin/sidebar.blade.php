@@ -40,14 +40,18 @@
                     <i class="fas fa-person"></i><span>Office</span>
                 </a>
             </li>
-            <li class='{{ Request::is('organization') ? 'active' : '' }}'>
-                <a class="nav-link" href="#">
+            <li class='{{ Request::is('position') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('position.index') }}">
                     <i class="fas fa-people-arrows"></i><span>Position</span>
                 </a>
-                <a class="nav-link" href="#">
+            </li>
+            <li class='{{ Request::is('place-transc') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('place-transc.index') }}">
                     <i class="fas fa-map-location-dot"></i><span>Transaction Place</span>
                 </a>
-                <a class="nav-link" href="#">
+            </li>
+            <li class='{{ Request::is('transc-type') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('transc-type.index') }}">
                     <i class="fas fa-circle-info"></i><span>Transaction Type</span>
                 </a>
             </li>

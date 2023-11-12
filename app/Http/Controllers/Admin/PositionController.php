@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Office;
+use App\Models\Position;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class OfficeController extends Controller
+class PositionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,7 @@ class OfficeController extends Controller
     public function index()
     {
         try {
-            $datas = Office::withCount('users')->get();
+            $datas = Position::whereNotIn('id',[1])->get();
             return view("pages.admin.position.index", [
                 'datas' => $datas,
             ]);
@@ -31,7 +30,7 @@ class OfficeController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.office.action.insert');
+        return view('pages.admin.position.action.insert');
     }
 
     /**
@@ -41,17 +40,15 @@ class OfficeController extends Controller
     {
         try {
             $request->validate([
-                'code' => "required",
                 'name' => "required"
             ]);
 
-            $office = new Office();
-            $office->code = $request->code;
+            $office = new Position();
             $office->name = $request->name;
             $office->save();
 
-            Alert::toast('Sukses menambah kantor', 'success');
-            return redirect()->route('office.index');
+            Alert::toast('Sukses menambah posisi', 'success');
+            return redirect()->route('position.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -63,6 +60,7 @@ class OfficeController extends Controller
      */
     public function show(string $id)
     {
+        //
     }
 
     /**
@@ -71,9 +69,9 @@ class OfficeController extends Controller
     public function edit(string $id)
     {
         try {
-            $data = Office::find($id);
+            $data = Position::find($id);
 
-            return view('pages.admin.office.action.update', [
+            return view('pages.admin.position.action.update', [
                 'data' => $data
             ]);
         } catch (\Exception $e) {
@@ -85,16 +83,15 @@ class OfficeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         try {
-            $office = Office::find($id);
-            $office->code = $request->code;
+            $office = Position::find($id);
             $office->name = $request->name;
             $office->save();
 
-            Alert::toast('Sukses update data kantor', 'success');
-            return redirect()->route('office.index');
+            Alert::toast('Sukses update data posisi', 'success');
+            return redirect()->route('position.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -107,11 +104,11 @@ class OfficeController extends Controller
     public function destroy(string $id)
     {
         try {
-            $del = Office::find($id);
+            $del = Position::find($id);
             $del->delete();
 
-            Alert::toast('Sukses menghapus kantor', 'success');
-            return redirect()->route('office.index');
+            Alert::toast('Sukses menghapus posisi', 'success');
+            return redirect()->route('position.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();

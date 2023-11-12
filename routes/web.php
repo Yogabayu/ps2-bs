@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OfficeController;
+use App\Http\Controllers\Admin\PlaceTransactionController;
+use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Admin\TransactionTypeController;
 use App\Http\Controllers\Admin\UserActivityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -26,8 +29,11 @@ Route::middleware('auth','role:1')->group(function () {
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
     Route::get('dashboard',[DashboardController::class,'index'])->name('indexAdmin');
 
-    //user
     Route::resource('user',UserController::class);
     Route::resource('user-activity',UserActivityController::class);
     Route::resource('office',OfficeController::class);
+    Route::resource('position',PositionController::class);
+    Route::resource('place-transc',PlaceTransactionController::class);
+    Route::resource('transc-type',TransactionTypeController::class);
+
 });

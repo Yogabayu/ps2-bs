@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Office;
+use App\Models\Place_transcs;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class OfficeController extends Controller
+class PlaceTransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +15,8 @@ class OfficeController extends Controller
     public function index()
     {
         try {
-            $datas = Office::withCount('users')->get();
-            return view("pages.admin.position.index", [
+            $datas = Place_transcs::all();
+            return view("pages.admin.place-transc.index", [
                 'datas' => $datas,
             ]);
         } catch (\Exception $e) {
@@ -31,7 +30,7 @@ class OfficeController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.office.action.insert');
+        return view('pages.admin.place-transc.action.insert');
     }
 
     /**
@@ -45,13 +44,13 @@ class OfficeController extends Controller
                 'name' => "required"
             ]);
 
-            $office = new Office();
+            $office = new Place_transcs();
             $office->code = $request->code;
             $office->name = $request->name;
             $office->save();
 
             Alert::toast('Sukses menambah kantor', 'success');
-            return redirect()->route('office.index');
+            return redirect()->route('place-transc.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -71,9 +70,9 @@ class OfficeController extends Controller
     public function edit(string $id)
     {
         try {
-            $data = Office::find($id);
+            $data = Place_transcs::find($id);
 
-            return view('pages.admin.office.action.update', [
+            return view('pages.admin.place-transc.action.update', [
                 'data' => $data
             ]);
         } catch (\Exception $e) {
@@ -88,13 +87,13 @@ class OfficeController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $office = Office::find($id);
+            $office = Place_transcs::find($id);
             $office->code = $request->code;
             $office->name = $request->name;
             $office->save();
 
             Alert::toast('Sukses update data kantor', 'success');
-            return redirect()->route('office.index');
+            return redirect()->route('place-transc.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -107,11 +106,11 @@ class OfficeController extends Controller
     public function destroy(string $id)
     {
         try {
-            $del = Office::find($id);
+            $del = Place_transcs::find($id);
             $del->delete();
 
             Alert::toast('Sukses menghapus kantor', 'success');
-            return redirect()->route('office.index');
+            return redirect()->route('place-transc.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
