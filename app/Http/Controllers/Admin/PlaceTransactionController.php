@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Place_transcs;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PlaceTransactionController extends Controller
@@ -44,10 +46,15 @@ class PlaceTransactionController extends Controller
                 'name' => "required"
             ]);
 
-            $office = new Place_transcs();
-            $office->code = $request->code;
-            $office->name = $request->name;
-            $office->save();
+            $place = new Place_transcs();
+            $place->code = $request->code;
+            $place->name = $request->name;
+            $place->save();
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menambahkan Tempat Transaksi baru : ' . $place->name,
+            ]);
 
             Alert::toast('Sukses menambah kantor', 'success');
             return redirect()->route('place-transc.index');
@@ -87,10 +94,15 @@ class PlaceTransactionController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $office = Place_transcs::find($id);
-            $office->code = $request->code;
-            $office->name = $request->name;
-            $office->save();
+            $place = Place_transcs::find($id);
+            $place->code = $request->code;
+            $place->name = $request->name;
+            $place->save();
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Melakukan Update Tempat Transaksi : ' . $place->name,
+            ]);
 
             Alert::toast('Sukses update data kantor', 'success');
             return redirect()->route('place-transc.index');
@@ -106,7 +118,12 @@ class PlaceTransactionController extends Controller
     public function destroy(string $id)
     {
         try {
+            
             $del = Place_transcs::find($id);
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menghapus Tempat Transaksi : ' . $del->name,
+            ]);
             $del->delete();
 
             Alert::toast('Sukses menghapus kantor', 'success');

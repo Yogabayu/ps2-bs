@@ -10,7 +10,7 @@ class Transaction extends Model
     use HasFactory;
     protected $table = "transactions";
     protected $fillable = [
-        "position_id", "code", "max_time"
+        "position_id", "code", "max_time","name"
     ];
 
     public function position()

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Office;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -50,6 +52,11 @@ class OfficeController extends Controller
             $office->name = $request->name;
             $office->save();
 
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menambahkan kantor baru : ' . $office->name,
+            ]);
+
             Alert::toast('Sukses menambah kantor', 'success');
             return redirect()->route('office.index');
         } catch (\Exception $e) {
@@ -93,6 +100,11 @@ class OfficeController extends Controller
             $office->name = $request->name;
             $office->save();
 
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Update kantor : ' . $office->name,
+            ]);
+
             Alert::toast('Sukses update data kantor', 'success');
             return redirect()->route('office.index');
         } catch (\Exception $e) {
@@ -107,7 +119,12 @@ class OfficeController extends Controller
     public function destroy(string $id)
     {
         try {
+            
             $del = Office::find($id);
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menghapus kantor : ' . $del->name,
+            ]);
             $del->delete();
 
             Alert::toast('Sukses menghapus kantor', 'success');

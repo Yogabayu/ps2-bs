@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Position;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PositionController extends Controller
@@ -15,7 +17,7 @@ class PositionController extends Controller
     public function index()
     {
         try {
-            $datas = Position::whereNotIn('id',[1])->get();
+            $datas = Position::whereNotIn('id', [1])->get();
             return view("pages.admin.position.index", [
                 'datas' => $datas,
             ]);
@@ -43,9 +45,14 @@ class PositionController extends Controller
                 'name' => "required"
             ]);
 
-            $office = new Position();
-            $office->name = $request->name;
-            $office->save();
+            $position = new Position();
+            $position->name = $request->name;
+            $position->save();
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menambahkan Posisi baru : ' . $position->name,
+            ]);
 
             Alert::toast('Sukses menambah posisi', 'success');
             return redirect()->route('position.index');
@@ -86,9 +93,14 @@ class PositionController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $office = Position::find($id);
-            $office->name = $request->name;
-            $office->save();
+            $position = Position::find($id);
+            $position->name = $request->name;
+            $position->save();
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menambahkan Posisi baru : ' . $position->name,
+            ]);
 
             Alert::toast('Sukses update data posisi', 'success');
             return redirect()->route('position.index');
@@ -105,6 +117,12 @@ class PositionController extends Controller
     {
         try {
             $del = Position::find($id);
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menghapus Posisi baru : ' . $del->name,
+            ]);
+            
             $del->delete();
 
             Alert::toast('Sukses menghapus posisi', 'success');
