@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>@yield('title') &mdash; {{ $app->name_app }}</title>
-
-    <link rel="icon" href="{{ asset('file/setting/' . $app->logo) }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('file/setting/' . $app->logo) }}" type="image/x-icon">
+    <title>@yield('title') &mdash; P2 &mdash; BS</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('stisla/library/bootstrap/dist/css/bootstrap.min.css') }}">
@@ -21,7 +18,6 @@
     <link rel="stylesheet" href="{{ asset('stisla/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/css/components.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
 
     <!-- Start GA -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
@@ -37,23 +33,26 @@
     </script>
     <!-- END GA -->
 </head>
-</head>
 
 <body>
     <div id="app">
-        <div class="main-wrapper">
-            <!-- Header -->
-            @include('layouts.admin.header')
+        <section class="section">
+            <div class="container mt-5">
+                <div class="row">
+                    <div
+                        class="{{ Request::is('auth-register') ? 'col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2' : 'col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4' }}">
+                        <!-- Footer -->
+                        @include('components.auth-header')
 
-            <!-- Sidebar -->
-            @include('layouts.admin.sidebar')
+                        <!-- Content -->
+                        @yield('main')
 
-            <!-- Content -->
-            @yield('main')
-
-            <!-- Footer -->
-            @include('layouts.admin.footer')
-        </div>
+                        <!-- Footer -->
+                        @include('components.auth-footer')
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- General JS Scripts -->
@@ -72,6 +71,7 @@
     <script src="{{ asset('stisla/js/scripts.js') }}"></script>
     <script src="{{ asset('stisla/js/custom.js') }}"></script>
     <script>
+        // Auto-close the alert messages after 3 seconds (3000 milliseconds)
         setTimeout(function() {
             $('.swal2-popup').fadeOut();
         }, 3000);

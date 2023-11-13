@@ -2,21 +2,21 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             @if ($app !== null)
-                <a href="{{ route('indexAdmin') }}">
+                <a href="#">
                     <img alt="image" src="{{ asset('file/setting/' . $app->logo) }}" class="mr-1"
                         style="max-width: 40px; max-height: 40px;">{{ $app->name_app }}</a>
             @else
-                <a href="{{ route('indexAdmin') }}">App-2</a>
+                <a href="#">App-2</a>
             @endif
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             @if ($app !== null)
-                <a href="{{ route('indexAdmin') }}">
+                <a href="#">
                     <img alt="image" src="{{ asset('file/setting/' . $app->logo) }}" class="mr-1"
                         style="max-width: 40px; max-height: 40px;">
                 </a>
             @else
-                <a href="{{ route('indexAdmin') }}">App-2</a>
+                <a href="#">App-2</a>
             @endif
         </div>
         <ul class="sidebar-menu">
@@ -29,13 +29,10 @@
             <li class="menu-header">Datas</li>
             <li>
                 <a class="nav-link" href="#">
-                    <i class="fas fa-database"></i><span>Monitoring</span>
-                </a>
-                <a class="nav-link" href="#">
                     <i class="fas fa-magnifying-glass-chart"></i><span>All Data</span>
                 </a>
             </li>
-            <li class="menu-header">User</li>
+            {{-- <li class="menu-header">User</li>
             <li class='{{ Request::is('user') ? 'active' : '' }}'>
                 <a class="nav-link " href="{{ route('user.index') }}">
                     <i class="fas fa-person"></i><span>List User</span>
@@ -78,7 +75,7 @@
                 <a class="nav-link" href="#">
                     <i class="fas fa-file-shield"></i><span>SSO</span>
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </aside>
 </div>

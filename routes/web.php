@@ -4,10 +4,14 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OfficeController;
 use App\Http\Controllers\Admin\PlaceTransactionController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TransactionTypeController;
 use App\Http\Controllers\Admin\UserActivityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\User\DataController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,5 +39,13 @@ Route::middleware('auth','role:1')->group(function () {
     Route::resource('position',PositionController::class);
     Route::resource('place-transc',PlaceTransactionController::class);
     Route::resource('transc-type',TransactionTypeController::class);
+    Route::resource('setting-app',SettingController::class);
+    Route::resource('profile',ProfileController::class);
 
+});
+
+//user
+Route::middleware('auth')->group(function () {
+    Route::resource('u-dashboard', UserDashboardController::class);
+    Route::resource('u-data', DataController::class);
 });

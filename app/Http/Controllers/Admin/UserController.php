@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Office;
 use App\Models\Position;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
@@ -23,10 +24,12 @@ class UserController extends Controller
     {
         try {
             $datas = User::with('position', 'office')->get();
+            $app = Setting::first();
 
             return view("pages.admin.user.index", [
                 'type_menu' => 'user',
                 'datas' => $datas,
+                'app' => $app,
             ]);
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');

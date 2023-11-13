@@ -3,27 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
-use App\Models\UserActivity;
 use Illuminate\Http\Request;
 
-class UserActivityController extends Controller
+class DatasController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try {
-            $datas = UserActivity::with('user')->orderByDesc('id')->get();
-            $app = Setting::first();
-
-            return view('pages.admin.user-activity.index',['datas'=>$datas,
-            'app' => $app,]);
-        } catch (\Exception $e) {
-            Alert::error($e->getMessage(), 'error');
-            return redirect()->back();
-        }
+        //
     }
 
     /**

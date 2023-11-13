@@ -43,16 +43,16 @@
     <div id="app">
         <div class="main-wrapper">
             <!-- Header -->
-            @include('layouts.admin.header')
+            @include('layouts.user.header')
 
             <!-- Sidebar -->
-            @include('layouts.admin.sidebar')
+            @include('layouts.user.sidebar')
 
             <!-- Content -->
             @yield('main')
 
             <!-- Footer -->
-            @include('layouts.admin.footer')
+            @include('layouts.user.footer')
         </div>
     </div>
 

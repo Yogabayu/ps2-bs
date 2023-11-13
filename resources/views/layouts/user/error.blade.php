@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>@yield('title') &mdash; {{ $app->name_app }}</title>
-
-    <link rel="icon" href="{{ asset('file/setting/' . $app->logo) }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('file/setting/' . $app->logo) }}" type="image/x-icon">
+    <title>@yield('title') &mdash; P2 &mdash; BS</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('stisla/library/bootstrap/dist/css/bootstrap.min.css') }}">
@@ -35,25 +32,20 @@
 
         gtag('config', 'UA-94034622-3');
     </script>
-    <!-- END GA -->
-</head>
+    <!-- /END GA -->
 </head>
 
 <body>
     <div id="app">
-        <div class="main-wrapper">
-            <!-- Header -->
-            @include('layouts.admin.header')
+        <section class="section">
+            <div class="container mt-5">
+                <!-- Content -->
+                @yield('main')
 
-            <!-- Sidebar -->
-            @include('layouts.admin.sidebar')
-
-            <!-- Content -->
-            @yield('main')
-
-            <!-- Footer -->
-            @include('layouts.admin.footer')
-        </div>
+                <!-- Footer -->
+                @include('components.error-footer')
+            </div>
+        </section>
     </div>
 
     <!-- General JS Scripts -->
@@ -72,10 +64,10 @@
     <script src="{{ asset('stisla/js/scripts.js') }}"></script>
     <script src="{{ asset('stisla/js/custom.js') }}"></script>
     <script>
+        // Auto-close the alert messages after 3 seconds (3000 milliseconds)
         setTimeout(function() {
             $('.swal2-popup').fadeOut();
         }, 3000);
     </script>
-</body>
 
 </html>

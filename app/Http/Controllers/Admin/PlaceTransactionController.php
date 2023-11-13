@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Place_transcs;
+use App\Models\Setting;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,10 @@ class PlaceTransactionController extends Controller
     {
         try {
             $datas = Place_transcs::all();
+            $app = Setting::first();
             return view("pages.admin.place-transc.index", [
                 'datas' => $datas,
+                'app' => $app,
             ]);
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');

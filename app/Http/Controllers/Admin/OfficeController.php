@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Office;
+use App\Models\Setting;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,9 +19,11 @@ class OfficeController extends Controller
     public function index()
     {
         try {
+            $app = Setting::first();
             $datas = Office::withCount('users')->get();
             return view("pages.admin.position.index", [
                 'datas' => $datas,
+                'app' => $app,
             ]);
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,10 @@ class AuthController extends Controller
 {
     public function index()
     {
-        return view("welcome");
+
+        $app = Setting::first();
+        return view("welcome",[
+                'app' => $app,]);
     }
     public function login(Request $request)
     {
@@ -21,26 +25,28 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-
             $credentials = $request->only('email', 'password');
 
             if (Auth::attempt($credentials)) {
-                $user = Auth::user()->with('position')->first();
-
-                if ($user->position->id == 1) {
-                    //insert to activity user
+                $user = Auth::user();
+                // dd($user);
+                if ($user->position_id === 1) {
                     UserActivity::create([
                         'user_uuid' => Auth::user()->uuid,
                         'activity' => 'Login ke sistem',
                     ]);
                     Alert::toast('Berhasil masuk sebagai admin', 'success');
                     return redirect()->route('indexAdmin');
-                } elseif ($user->position->id == 2) {
+                } elseif ($user->position_id == 2) {
                     Alert::toast('Error ini error dari controller', 'error');
                     abort(403, 'Unauthorized action. | spv');
                 } else {
-                    Alert::toast('Error ini error dari controller', 'error');
-                    abort(403, 'Unauthorized action. | User');
+                    UserActivity::create([
+                        'user_uuid' => Auth::user()->uuid,
+                        'activity' => 'Login ke sistem',
+                    ]);
+                    Alert::toast('Berhasil masuk sebagai admin', 'success');
+                    return redirect()->route('u-dashboard.index');
                 }
             } else {
                 Alert::toast('Email atau Password salah', 'error');

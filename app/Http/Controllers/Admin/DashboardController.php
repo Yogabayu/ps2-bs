@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Datas;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ class DashboardController extends Controller
     public function index()
     {
         try {
+            $app = Setting::first();
             $totalAdmin = User::where('position_id', 1)->count();
             $totalSPV = User::where('position_id', 2)->count();
             $totalUser = User::whereNotIn('position_id', [1, 2])->count();
@@ -24,6 +26,7 @@ class DashboardController extends Controller
 
             return view('pages.admin.dashboard', [
                 'type_menu' => 'dashboard',
+                'app' => $app,
                 'totalAdmin' => $totalAdmin,
                 'totalSpv' => $totalSPV,
                 'totalUser' => $totalUser,

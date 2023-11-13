@@ -76,9 +76,9 @@
                                                     <i class="fas fa-clock"></i>
                                                 </div>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Durasi Waktu (HH:mm:ss)"
-                                                name="max_time" required
-                                                pattern="(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)">
+                                            <input type="text" class="form-control"
+                                                placeholder="Durasi Waktu (jam:menit:detik)" name="max_time" required
+                                                pattern="^(?:[0-1]?[0-9]|[2][0-3]):([0-5][0-9])(:[0-5][0-9])?$">
                                         </div>
                                         <small>Format: jam:menit:detik (contoh: 00:03:00)</small>
                                     </div>

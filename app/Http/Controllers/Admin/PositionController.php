@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Position;
+use App\Models\Setting;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,10 @@ class PositionController extends Controller
     {
         try {
             $datas = Position::whereNotIn('id', [1])->get();
+            $app = Setting::first();
             return view("pages.admin.position.index", [
                 'datas' => $datas,
+                'app' => $app,
             ]);
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');

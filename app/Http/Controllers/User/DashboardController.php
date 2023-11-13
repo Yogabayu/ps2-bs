@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Place_transcs;
 use App\Models\Setting;
-use App\Models\UserActivity;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
-class UserActivityController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,13 +18,13 @@ class UserActivityController extends Controller
     public function index()
     {
         try {
-            $datas = UserActivity::with('user')->orderByDesc('id')->get();
             $app = Setting::first();
+            $transactions = Transaction::where('position_id',Auth::user()->id)->get();
+            $places = Place_transcs::all();
 
-            return view('pages.admin.user-activity.index',['datas'=>$datas,
-            'app' => $app,]);
+            return view("pages.user.dashboard", compact("transactions","places","app"));
         } catch (\Exception $e) {
-            Alert::error($e->getMessage(), 'error');
+            Alert::toast('Error : '.$e->getMessage(),'error');
             return redirect()->back();
         }
     }
