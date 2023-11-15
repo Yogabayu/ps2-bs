@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,12 +30,15 @@ class AuthController extends Controller
 
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                // dd($user);
                 if ($user->position_id === 1) {
                     UserActivity::create([
                         'user_uuid' => Auth::user()->uuid,
                         'activity' => 'Login ke sistem',
                     ]);
+                    
+                    //update active
+                    User::where('uuid', Auth::user()->uuid)->update(['isActive' => 1]);
+
                     Alert::toast('Berhasil masuk sebagai admin', 'success');
                     return redirect()->route('indexAdmin');
                 } elseif ($user->position_id == 2) {
@@ -45,7 +49,7 @@ class AuthController extends Controller
                         'user_uuid' => Auth::user()->uuid,
                         'activity' => 'Login ke sistem',
                     ]);
-                    Alert::toast('Berhasil masuk sebagai admin', 'success');
+                    Alert::toast('Berhasil masuk sebagai user', 'success');
                     return redirect()->route('u-dashboard.index');
                 }
             } else {
@@ -64,6 +68,7 @@ class AuthController extends Controller
             'user_uuid' => Auth::user()->uuid,
             'activity' => 'Logout sistem',
         ]);
+        User::where('uuid', Auth::user()->uuid)->update(['isActive' => 0]);
         Auth::logout();
         return redirect('/');
     }

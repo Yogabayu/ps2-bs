@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Office;
-use App\Models\Position;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ProfileController extends Controller
@@ -22,15 +19,12 @@ class ProfileController extends Controller
     public function index()
     {
         try {
-            $app = Setting::first();
             $profile = User::where('uuid', Auth::user()->uuid)->first();
-            $offices = Office::all();
-            $positions = Position::all();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $app = Setting::first();
 
-            return view("pages.admin.profile.index", compact("app","profile","offices","positions","totalActiveTrans"));
+            return view('pages.user.profile', compact('profile', 'app'));
         } catch (\Exception $e) {
-            Alert::error($e->getMessage(), 'error');
+            Alert::toast($e->getMessage(), 'success');
             return redirect()->back();
         }
     }
@@ -76,12 +70,11 @@ class ProfileController extends Controller
             $request->validate([
                 'photo' => 'mimes:jpeg,jpg,png|max:2048',
             ]);
+            // dd($request->all());
             $user = User::where('uuid', $uuid)->first();
             $user->nik = $request->nik;
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->office_id = $request->office_id;
-            $user->position_id = $request->position_id;
 
             if ($request->hasFile('photo')) {
                 $oldImage = $user->photo;
@@ -106,7 +99,7 @@ class ProfileController extends Controller
                 'activity' => 'melakukan update user : ' . $user->name,
             ]);
             Alert::toast('Berhasil melakukan update user', 'success');
-            return redirect()->route('profile.index');
+            return redirect()->route('u-profile.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();

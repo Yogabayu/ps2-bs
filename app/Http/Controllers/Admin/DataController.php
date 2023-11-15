@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Datas;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use RealRashid\SweetAlert\Facades\Alert;
 
-class UserActivityController extends Controller
+class DataController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,13 +20,14 @@ class UserActivityController extends Controller
     public function index()
     {
         try {
-            $datas = UserActivity::with('user.position')->orderByDesc('id')->get();
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)->count();
+            $datas =
+                Datas::with('user', 'transaction', 'placeTransc')->orderBy('created_at', 'desc')->get();
 
-            return view('pages.admin.user-activity.index',compact('datas','app','totalActiveTrans'));
+            return view("pages.admin.all-data.index", compact("app", "datas","totalActiveTrans"));
         } catch (\Exception $e) {
-            Alert::error($e->getMessage(), 'error');
+            Alert::toast($e->getMessage(), 'error');
             return redirect()->back();
         }
     }
@@ -72,6 +77,26 @@ class UserActivityController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $del = Datas::findOrFail($id);
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Melakukan hapus data : ' .$del->customer_name,
+            ]);
+
+            if (!empty($del->evidence_file)) {
+                if ($del->evidence_file && File::exists(public_path('file/datas/' . $del->evidence_file))) {
+                    File::delete(public_path('file/datas/' . $del->evidence_file));
+                }
+            }
+            $del->delete();
+
+            Alert::toast('Data Berhasil dihapus', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::toast($e->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 }

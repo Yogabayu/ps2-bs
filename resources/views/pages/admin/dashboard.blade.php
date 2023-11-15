@@ -15,7 +15,6 @@
             </div>
             <div class="row">
                 {{-- total admin --}}
-
                 <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                     <a href="{{ route('user.index') }}">
                         <div class="card card-statistic-1">
@@ -77,7 +76,7 @@
                         </div>
                         <div class="card-wrap">
                             <div class="card-header">
-                                <h4>Active Transactions</h4>
+                                <h4>Active Users</h4>
                             </div>
                             <div class="card-body">
                                 {{ $totalActiveTrans }}
@@ -142,7 +141,13 @@
                             <h4>Statistics</h4>
                             <div class="card-header-action">
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-primary">Month</a>
+                                    <form method="GET" action="{{ route('indexAdmin') }}">
+                                        @csrf
+                                        <button type="submit" name="filter" value="week"
+                                            class="{{ $filter === 'week' || $filter === null ? 'btn btn-primary' : 'btn' }}">Week</button>
+                                        <button type="submit" name="filter" value="month"
+                                            class="{{ $filter === 'month' ? 'btn btn-primary' : 'btn' }}">Month</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -203,8 +208,49 @@
     <script src="{{ asset('stisla/library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('stisla/js/page/index-0.js') }}"></script>
+    {{-- <script src="{{ asset('stisla/js/page/index-0.js') }}"></script> --}}
+    <script>
+        "use strict";
+
+        var statistics_chart = document.getElementById("myChart").getContext("2d");
+
+        var myChart = new Chart(statistics_chart, {
+            type: "line",
+            data: {
+                labels: {!! json_encode($dataGrafikChart->pluck('unit')->toArray()) !!},
+                datasets: [{
+                    label: 'input per' + '{!! $filter === 'week' ? 'minggu' : 'bulan' !!}: ',
+                    data: {!! json_encode($dataGrafikChart->pluck('total')->toArray()) !!},
+                    borderWidth: 2,
+                    backgroundColor: '#6777ef',
+                    borderColor: '#6777ef',
+                    borderWidth: 2.5,
+                    pointBackgroundColor: '#ffffff',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            stepSize: 150,
+                        },
+                    }, ],
+                    xAxes: [{
+                        gridLines: {
+                            color: "#fbfbfb",
+                            lineWidth: 2,
+                        },
+                    }, ],
+                },
+            },
+        });
+    </script>
 @endpush
-
-
-{{-- TODO ::  penyesuaian tampilan dashboard --}}

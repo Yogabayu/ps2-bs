@@ -25,18 +25,20 @@ class UserController extends Controller
         try {
             $datas = User::with('position', 'office')->get();
             $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
 
             return view("pages.admin.user.index", [
                 'type_menu' => 'user',
                 'datas' => $datas,
                 'app' => $app,
+                'totalActiveTrans' => $totalActiveTrans,
             ]);
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
         }
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -44,12 +46,16 @@ class UserController extends Controller
     {
         $offices = Office::all();
         $positions = Position::all();
+        $app = Setting::first();
+        $totalActiveTrans = User::where('isActive', 1)->count();
         return view('pages.admin.user.action.insert', [
             'offices' => $offices,
             'positions' => $positions,
+            'app' => $app,
+            'totalActiveTrans' => $totalActiveTrans,
         ]);
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -74,7 +80,7 @@ class UserController extends Controller
             $user->office_id    = $request->office_id;
             $user->position_id  = $request->position_id;
             $user->password     = Hash::make($request->password);
-
+            
             if ($request->hasFile('photo')) {
                 $imageEXT = $request->file('photo')->getClientOriginalName();
                 $filename = pathinfo($imageEXT, PATHINFO_FILENAME);
@@ -83,14 +89,14 @@ class UserController extends Controller
                 $path = $request->file('photo')->move(public_path('file/profile'), $fileimage);
                 $user->photo = $fileimage;
             }
-
+            
             $user->save();
-
+            
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,
                 'activity' => 'Menambahkan user baru : ' . $user->name,
             ]);
-
+            
             Alert::toast('Berhasil Menambahkan user baru', 'success');
             return redirect()->route('user.index');
         } catch (\Exception $e) {
@@ -108,11 +114,15 @@ class UserController extends Controller
             $user = User::find($id);
             $offices = Office::all();
             $positions = Position::all();
-
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
+            
             return view('pages.admin.user.action.update', [
                 'user'      => $user,
                 'offices'   => $offices,
                 'positions' => $positions,
+                'app'       => $app,
+                'totalActiveTrans' => $totalActiveTrans,
             ]);
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
@@ -137,7 +147,6 @@ class UserController extends Controller
             $request->validate([
                 'photo'         => 'mimes:jpeg,jpg,png|max:2048',
             ]);
-            // dd($request->all());
             $user = User::where('uuid', $uuid)->first();
             $user->nik = $request->nik;
             $user->name = $request->name;

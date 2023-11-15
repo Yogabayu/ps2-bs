@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Place_transcs;
 use App\Models\Setting;
+use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,8 @@ class PlaceTransactionController extends Controller
         try {
             $datas = Place_transcs::all();
             $app = Setting::first();
-            return view("pages.admin.place-transc.index", [
-                'datas' => $datas,
-                'app' => $app,
-            ]);
+            $totalActiveTrans = User::where('isActive', 1)->count();
+            return view("pages.admin.place-transc.index", compact("datas","app","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -35,7 +34,9 @@ class PlaceTransactionController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.place-transc.action.insert');
+        $app = Setting::first();
+        $totalActiveTrans = User::where('isActive', 1)->count();
+        return view('pages.admin.place-transc.action.insert', compact('app','totalActivetrans'));
     }
 
     /**
@@ -81,10 +82,10 @@ class PlaceTransactionController extends Controller
     {
         try {
             $data = Place_transcs::find($id);
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
 
-            return view('pages.admin.place-transc.action.update', [
-                'data' => $data
-            ]);
+            return view('pages.admin.place-transc.action.update', compact('app','data','totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -121,7 +122,7 @@ class PlaceTransactionController extends Controller
     public function destroy(string $id)
     {
         try {
-            
+
             $del = Place_transcs::find($id);
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,

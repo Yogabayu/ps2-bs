@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Office;
 use App\Models\Setting;
+use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,12 @@ class OfficeController extends Controller
     {
         try {
             $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
             $datas = Office::withCount('users')->get();
             return view("pages.admin.position.index", [
                 'datas' => $datas,
                 'app' => $app,
+                'totalActiveTrans' => $totalActiveTrans,
             ]);
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
@@ -36,7 +39,9 @@ class OfficeController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.office.action.insert');
+        $app = Setting::first();
+        $totalActiveTrans = User::where('isActive', 1)->count();
+        return view('pages.admin.office.action.insert',compact('app','totalActiveTrans'));
     }
 
     /**
@@ -82,10 +87,10 @@ class OfficeController extends Controller
     {
         try {
             $data = Office::find($id);
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
 
-            return view('pages.admin.office.action.update', [
-                'data' => $data
-            ]);
+            return view('pages.admin.office.action.update', compact('app','data','totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();

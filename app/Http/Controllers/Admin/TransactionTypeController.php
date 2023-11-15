@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Position;
 use App\Models\Setting;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,8 @@ class TransactionTypeController extends Controller
         try {
             $app = Setting::first();
             $datas = Transaction::with('position')->get();
-            return view("pages.admin.transc-type.index", [
-                'datas' => $datas,
-                'app' => $app,
-            ]);
+            $totalActiveTrans = User::where('isActive', 1)->count();
+            return view("pages.admin.transc-type.index", compact("app","datas","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -37,8 +36,10 @@ class TransactionTypeController extends Controller
     public function create()
     {
         try {
-            $posisi = Position::whereNotIn('id', [1, 2])->get();
-            return view('pages.admin.transc-type.action.insert', ['positions' => $posisi]);
+            $positions = Position::whereNotIn('id', [1, 2])->get();
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
+            return view('pages.admin.transc-type.action.insert', compact('app','positions','totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -94,11 +95,10 @@ class TransactionTypeController extends Controller
         try {
             $positions = Position::whereNotIn('id', [1, 2])->get();
             $type = Transaction::find($id);
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
 
-            return view('pages.admin.transc-type.action.update', [
-                'positions' => $positions,
-                'type' => $type,
-            ]);
+            return view('pages.admin.transc-type.action.update', compact('positions','app','type','totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();

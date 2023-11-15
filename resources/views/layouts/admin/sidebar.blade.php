@@ -27,11 +27,15 @@
                 </a>
             </li>
             <li class="menu-header">Datas</li>
-            <li>
-                <a class="nav-link" href="#">
-                    <i class="fas fa-database"></i><span>Monitoring</span>
+            <li class='{{ Request::is('monitoring') ? 'active' : '' }}'>
+                <a class="nav-link {{ Request::is('monitoring') || $totalActiveTrans !== 0 ? 'beep beep-sidebar' : '' }}"
+                    href="#">
+                    <i class="fas fa-magnifying-glass-chart"></i><span>Monitoring</span>
                 </a>
-                <a class="nav-link" href="#">
+            </li>
+
+            <li class='{{ Request::is('datas') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('datas.index') }}">
                     <i class="fas fa-magnifying-glass-chart"></i><span>All Data</span>
                 </a>
             </li>
@@ -40,7 +44,6 @@
                 <a class="nav-link " href="{{ route('user.index') }}">
                     <i class="fas fa-person"></i><span>List User</span>
                 </a>
-
             </li>
             <li class='{{ Request::is('user-activity') ? 'active' : '' }}'>
                 <a class="nav-link" href="{{ route('user-activity.index') }}">

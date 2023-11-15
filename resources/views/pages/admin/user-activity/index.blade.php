@@ -34,6 +34,7 @@
                                                     No
                                                 </th>
                                                 <th>Name</th>
+                                                <th>Posisi</th>
                                                 <th>Activity</th>
                                                 <th>Tanggal</th>
                                             </tr>
@@ -49,6 +50,9 @@
                                                     </td>
                                                     <td>
                                                         {{ $data->user->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $data->user->position->name }}
                                                     </td>
                                                     <td>
                                                         {{ $data->activity }}
@@ -76,7 +80,17 @@
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script>
+    {{-- <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script> --}}
+    <script>
+        "use strict";
+
+        $("#table-1").dataTable({
+            columnDefs: [{
+                sortable: false,
+                targets: []
+            }],
+        });
+    </script>
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script>
         function confirmDelete(deleteUrl) {

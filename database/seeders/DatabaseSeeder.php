@@ -102,5 +102,11 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
+        DB::table('settings')->insert([
+            [
+                'logo' => 'logos.png',
+                'name_app' => 'CepatCatat',
+            ],
+        ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Position;
 use App\Models\Setting;
+use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,8 @@ class PositionController extends Controller
         try {
             $datas = Position::whereNotIn('id', [1])->get();
             $app = Setting::first();
-            return view("pages.admin.position.index", [
-                'datas' => $datas,
-                'app' => $app,
-            ]);
+            $totalActiveTrans = User::where('isActive', 1)->count();
+            return view("pages.admin.position.index", compact("datas","app","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -35,7 +34,9 @@ class PositionController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.position.action.insert');
+        $app = Setting::first();
+        $totalActiveTrans = User::where('isActive', 1)->count();
+        return view('pages.admin.position.action.insert', compact('app','totalActiveTrans'));
     }
 
     /**
@@ -80,10 +81,10 @@ class PositionController extends Controller
     {
         try {
             $data = Position::find($id);
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)->count();
 
-            return view('pages.admin.position.action.update', [
-                'data' => $data
-            ]);
+            return view('pages.admin.position.action.update', compact('data','app','totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -125,7 +126,7 @@ class PositionController extends Controller
                 'user_uuid' => Auth::user()->uuid,
                 'activity' => 'Menghapus Posisi baru : ' . $del->name,
             ]);
-            
+
             $del->delete();
 
             Alert::toast('Sukses menghapus posisi', 'success');

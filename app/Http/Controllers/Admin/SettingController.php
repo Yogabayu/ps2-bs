@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,8 @@ class SettingController extends Controller
     {
         try {
             $app = Setting::first();
-            return view("pages.admin.setting.index", [
-                'app' => $app,
-            ]);
+            $totalActiveTrans = User::where('isActive', 1)->count();
+            return view("pages.admin.setting.index", compact("app","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
