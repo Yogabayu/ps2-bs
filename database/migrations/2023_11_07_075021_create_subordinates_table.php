@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('subordinates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('supervisor_id');
+            $table->uuid('supervisor_id');
             $table->uuid('subordinate_uuid');
             $table->timestamps();
 
-            $table->foreign('supervisor_id')->references('id')->on('positions');
+            $table->foreign('supervisor_id')->references('uuid')->on('users');
             $table->foreign('subordinate_uuid')->references('uuid')->on('users');
         });
     }

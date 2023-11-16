@@ -40,6 +40,7 @@
                                                 </th>
                                                 <th>Code</th>
                                                 <th>Nama</th>
+                                                <th>SPV</th>
                                                 <th>Jumlah User</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -58,6 +59,9 @@
                                                     </td>
                                                     <td>
                                                         {{ $data->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $data->supervisor->name ?? 'belum di setup' }}
                                                     </td>
                                                     <td>
                                                         {{ $data->users_count }}
@@ -94,7 +98,17 @@
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script>
+    {{-- <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script> --}}
+    <script>
+        "use strict";
+
+        $("#table-1").dataTable({
+            columnDefs: [{
+                sortable: false,
+                targets: []
+            }],
+        });
+    </script>
     <script>
         function confirmDelete(deleteUrl) {
             Swal.fire({

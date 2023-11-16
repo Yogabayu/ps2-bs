@@ -45,6 +45,8 @@ class AuthController extends Controller
                     Alert::toast('Error ini error dari controller', 'error');
                     abort(403, 'Unauthorized action. | spv');
                 } else {
+                    //update active
+                    User::where('uuid', Auth::user()->uuid)->update(['isActive' => 1]);
                     UserActivity::create([
                         'user_uuid' => Auth::user()->uuid,
                         'activity' => 'Login ke sistem',

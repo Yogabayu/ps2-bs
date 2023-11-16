@@ -76,6 +76,7 @@ class DatabaseSeeder extends Seeder
                 'position_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => 0,
             ],
             [
                 'uuid' => Str::uuid(),
@@ -88,6 +89,7 @@ class DatabaseSeeder extends Seeder
                 'position_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => 0,
             ],
             [
                 'uuid' => Str::uuid(),
@@ -100,6 +102,7 @@ class DatabaseSeeder extends Seeder
                 'position_id' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => 0,
             ],
         ]);
         DB::table('settings')->insert([

@@ -90,7 +90,17 @@
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script>
+    {{-- <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script> --}}
+    <script>
+        "use strict";
+
+        $("#table-1").dataTable({
+            columnDefs: [{
+                sortable: false,
+                targets: []
+            }],
+        });
+    </script>
     <script>
         function confirmDelete(deleteUrl) {
             Swal.fire({

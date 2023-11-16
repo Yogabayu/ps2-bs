@@ -29,7 +29,7 @@
             <li class="menu-header">Datas</li>
             <li class='{{ Request::is('monitoring') ? 'active' : '' }}'>
                 <a class="nav-link {{ Request::is('monitoring') || $totalActiveTrans !== 0 ? 'beep beep-sidebar' : '' }}"
-                    href="#">
+                    href="{{ route('monitoring.index') }}">
                     <i class="fas fa-magnifying-glass-chart"></i><span>Monitoring</span>
                 </a>
             </li>
@@ -39,21 +39,26 @@
                     <i class="fas fa-magnifying-glass-chart"></i><span>All Data</span>
                 </a>
             </li>
-            <li class="menu-header">User</li>
+
+            <li class="menu-header">Organization</li>
+            <li class='{{ Request::is('office') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('office.index') }}">
+                    <i class="fas fa-building"></i><span>Office</span>
+                </a>
+            </li>
             <li class='{{ Request::is('user') ? 'active' : '' }}'>
                 <a class="nav-link " href="{{ route('user.index') }}">
                     <i class="fas fa-person"></i><span>List User</span>
                 </a>
             </li>
+            <li class='{{ Request::is('subordinate') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('subordinate.index') }}">
+                    <i class="fas fa-users"></i><span>Subordinate</span>
+                </a>
+            </li>
             <li class='{{ Request::is('user-activity') ? 'active' : '' }}'>
                 <a class="nav-link" href="{{ route('user-activity.index') }}">
                     <i class="fas fa-clipboard"></i><span>User Activity</span>
-                </a>
-            </li>
-            <li class="menu-header">Organization</li>
-            <li class='{{ Request::is('office') ? 'active' : '' }}'>
-                <a class="nav-link" href="{{ route('office.index') }}">
-                    <i class="fas fa-person"></i><span>Office</span>
                 </a>
             </li>
             <li class='{{ Request::is('position') ? 'active' : '' }}'>

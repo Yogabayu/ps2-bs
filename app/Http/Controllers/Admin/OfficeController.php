@@ -22,8 +22,8 @@ class OfficeController extends Controller
         try {
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)->count();
-            $datas = Office::withCount('users')->get();
-            return view("pages.admin.position.index", [
+            $datas = Office::with('supervisor')->withCount('users')->get();
+            return view("pages.admin.office.index", [
                 'datas' => $datas,
                 'app' => $app,
                 'totalActiveTrans' => $totalActiveTrans,
@@ -40,8 +40,9 @@ class OfficeController extends Controller
     public function create()
     {
         $app = Setting::first();
+        $users = DB::table('users')->select('uuid','name')->get();
         $totalActiveTrans = User::where('isActive', 1)->count();
-        return view('pages.admin.office.action.insert',compact('app','totalActiveTrans'));
+        return view('pages.admin.office.action.insert',compact('app','totalActiveTrans','users'));
     }
 
     /**
@@ -49,15 +50,18 @@ class OfficeController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         try {
             $request->validate([
                 'code' => "required",
-                'name' => "required"
+                'name' => "required",
+                'supervisor_uuid' => 'required'
             ]);
 
             $office = new Office();
             $office->code = $request->code;
             $office->name = $request->name;
+            $office->supervisor_uuid = $request->supervisor_uuid;
             $office->save();
 
             UserActivity::create([
@@ -89,8 +93,9 @@ class OfficeController extends Controller
             $data = Office::find($id);
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)->count();
+            $users = DB::table('users')->select('uuid','name')->get();
 
-            return view('pages.admin.office.action.update', compact('app','data','totalActiveTrans'));
+            return view('pages.admin.office.action.update', compact('app','data','totalActiveTrans','users'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -106,6 +111,7 @@ class OfficeController extends Controller
             $office = Office::find($id);
             $office->code = $request->code;
             $office->name = $request->name;
+            $office->supervisor_uuid = $request->supervisor_uuid;
             $office->save();
 
             UserActivity::create([

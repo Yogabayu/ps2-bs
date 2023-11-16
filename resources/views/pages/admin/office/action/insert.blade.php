@@ -51,6 +51,24 @@
                                                 name="name" required>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label>SPV</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-person"></i>
+                                                </div>
+                                            </div>
+                                            <select class="form-control" name="supervisor_uuid" id="supervisor_uuid"
+                                                required>
+                                                <option selected>-</option>
+                                                @foreach ($users as $user)
+                                                    <option value="{{ $user->uuid }}">
+                                                        {{ $user->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-footer text-right">
                                     <button class="btn btn-primary mr-1" type="submit">Submit</button>

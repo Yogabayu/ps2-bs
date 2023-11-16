@@ -15,7 +15,7 @@ class Subordinate extends Model
 
     public function supervisor()
     {
-        return $this->belongsTo(Position::class, 'supervisor_id');
+        return $this->belongsTo(User::class, 'supervisor_id','uuid');
     }
     public function subordinate()
     {

@@ -1,16 +1,16 @@
 @extends('layouts.admin.app')
 
-@section('title', 'User')
+@section('title', 'Monitoring')
 
 @push('style')
     <link rel="stylesheet" href="{{ asset('stisla/library/datatables/media/css/jquery.dataTables.min.css') }}">
 @endpush
-{{-- //URUNG tambah reset password  --}}
+
 @section('main')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>User's Menu</h1>
+                <h1>Monitoring</h1>
             </div>
 
             <div class="section-body">
@@ -18,11 +18,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <a href="{{ route('user.create') }}">
-                                    <button class="btn btn-primary my-3">
-                                        <i class="fas fa-add"></i> Add user
-                                    </button>
-                                </a>
+
                                 <div class="table-responsive">
                                     <table class="table-striped table" id="table-1">
                                         <thead>
@@ -88,7 +84,6 @@
             </div>
         </section>
     </div>
-
 @endsection
 
 @push('scripts')

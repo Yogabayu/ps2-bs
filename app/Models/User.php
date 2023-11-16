@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function position()
     {
-        return $this->belongsTo(Position::class, 'position_id','id');
+        return $this->belongsTo(Position::class, 'position_id', 'id');
     }
 
     public function subordinates()
@@ -48,18 +48,28 @@ class User extends Authenticatable
         return $this->hasMany(Subordinate::class, 'uuid');
     }
 
+    public function spv()
+    {
+        return $this->hasMany(Subordinate::class, 'uuid');
+    }
+
     public function data()
     {
-        return $this->hasMany(Data::class,'user_uuid','uuid');
+        return $this->hasMany(Data::class, 'user_uuid', 'uuid');
     }
 
     public function sso()
     {
-        return $this->hasMany(Sso::class,'user_uuid','uuid');
+        return $this->hasMany(Sso::class, 'user_uuid', 'uuid');
     }
 
     public function userActivity()
     {
-        return $this->hasMany(UserActivity::class,'user_uuid','uuid');
+        return $this->hasMany(UserActivity::class, 'user_uuid', 'uuid');
+    }
+
+    public function supervisorOffice()
+    {
+        return $this->hasOne(Office::class, 'supervisor_uuid', 'uuid');
     }
 }
