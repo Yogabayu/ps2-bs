@@ -87,10 +87,11 @@ class SubordinateController extends Controller
 
             $cekDataSub = Subordinate::where('subordinate_uuid', '=', $request->user_uuid)->count();
             $cekDataSpv = Subordinate::where('supervisor_id', '=', $request->user_uuid)->count();
+            $cekDataSpv2 = Office::where('supervisor_uuid', '=', $request->user_uuid)->count();
             if ($cekDataSub > 0) {
                 Alert::toast('User sudah terdaftar sebagai anggota dari salah satu spv', 'error');
                 return redirect()->back();
-            } elseif ($cekDataSpv > 0) {
+            } elseif ($cekDataSpv > 0 || $cekDataSpv2 > 0) {
                 Alert::toast('User sudah terdaftar sebagai spv, silahkan ubah posisi user terlebih dahulu', 'error');
                 return redirect()->back();
             } else {

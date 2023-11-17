@@ -21,6 +21,8 @@ class User extends Authenticatable
         'password',
         'office_id',
         'position_id',
+        'isActive',
+        'isProcessing'
     ];
 
     protected $hidden = [

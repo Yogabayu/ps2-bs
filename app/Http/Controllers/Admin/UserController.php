@@ -155,6 +155,7 @@ class UserController extends Controller
             $user->office_id = $request->office_id;
             $user->position_id = $request->position_id;
             $user->isActive = 0;
+            $user->isProcessing = 0;
 
             if ($request->hasFile('photo')) {
                 $oldImage = $user->photo;

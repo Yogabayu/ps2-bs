@@ -28,9 +28,15 @@
                                                 </th>
                                                 <th>Photo</th>
                                                 <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Cabang</th>
+                                                <th>Kantor</th>
                                                 <th>Posisi</th>
+                                                <th>
+                                                    Total Activitas <a href="#" data-container="body"
+                                                        data-toggle="popover" data-placement="top"
+                                                        data-content="Total aktivitas yang dilakukan hari ini">
+                                                        <i class="fas fa-question"></i>
+                                                    </a>
+                                                </th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -38,7 +44,7 @@
                                             @php
                                                 $no = 1;
                                             @endphp
-                                            @foreach ($datas as $data)
+                                            @foreach ($userActives as $data)
                                                 <tr>
                                                     <td>
                                                         {{ $no++ }}
@@ -53,24 +59,19 @@
                                                         {{ $data->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->email }}
+                                                        {{ $data->office_name }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->office->code }} - {{ $data->office->name }}
+                                                        {{ $data->position_name }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->position->name }}
+                                                        {{ $data->totalActivity }}
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('user.show', $data->id) }}"
-                                                            class="btn btn-info btn-sm" title="Edit">
-                                                            <i class="fas fa-edit"></i>
+                                                        //URUNG ini belum aksinya
+                                                        <a href="#" class="btn btn-info btn-sm" title="Edit">
+                                                            <i class="fas fa-eye"></i>
                                                         </a>
-
-                                                        <button class="btn btn-danger btn-sm" title="Delete"
-                                                            onclick="confirmDelete('{{ route('user.destroy', $data->id) }}')">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach

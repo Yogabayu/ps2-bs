@@ -17,24 +17,21 @@ class MonitoringController extends Controller
      */
     public function index()
     {
-        //URUNG kurang nampilne
+        //URUNG kurang detail activity setelah click detail
         try {
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)->count();
             $userActives = DB::table('users')
             ->join('positions', 'users.position_id', '=', 'positions.id')
+            ->join('offices','users.office_id','=','offices.id')
             ->join('user_activities', 'users.uuid', '=', 'user_activities.user_uuid')
             ->where('users.isActive', '=', 1)
             ->where('positions.id', '!=', 1)
             ->whereDate('user_activities.created_at', now()) // Filter aktivitas hanya pada hari ini
-            ->select('users.id', 'users.name', 'users.photo', 'positions.name as position_name', DB::raw('count(*) as
+            ->select('users.id', 'users.name', 'users.photo', 'positions.name as position_name','offices.name as office_name', DB::raw('count(*) as
             totalActivity'))
-            ->groupBy('users.id', 'users.name', 'users.photo', 'positions.name')
+            ->groupBy('users.id', 'users.name', 'users.photo', 'positions.name','office_name')
             ->get();
-
-
-            dd($userActives);
-
             return view('pages.admin.monitoring.index', compact('app', 'totalActiveTrans', 'userActives'));
         } catch (\Exception $e) {
             Alert::toast($e->getMessage(), 'error');
