@@ -58,6 +58,7 @@
 
     <!-- General JS Scripts -->
     @include('sweetalert::alert')
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('stisla/library/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('stisla/library/popper.js/dist/umd/popper.js') }}"></script>
     <script src="{{ asset('stisla/library/tooltip.js/dist/umd/tooltip.js') }}"></script>

@@ -99,10 +99,10 @@
                                                             data-backdrop="false">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        {{-- <button class="btn btn-danger btn-sm" title="Delete"
+                                                        <button class="btn btn-danger btn-sm" title="Delete"
                                                             onclick="confirmDelete('{{ route('u-data.destroy', $data->id) }}')">
                                                             <i class="fas fa-trash-alt"></i>
-                                                        </button> --}}
+                                                        </button>
                                                     </td>
                                                 </tr>
 

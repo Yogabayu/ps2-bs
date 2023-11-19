@@ -48,7 +48,10 @@ Route::middleware('auth', 'role:1')->group(function () {
     Route::resource('setting-app', SettingController::class);
     Route::resource('profile', ProfileController::class);
     Route::resource('datas', AdminDataController::class);
+    
+    // monitoring
     Route::resource('monitoring', MonitoringController::class);
+    Route::post('last-monitoring',[MonitoringController::class,'lastData'])->name('last-monitoring');
 
     // subordinate
     Route::resource('subordinate', SubordinateController::class);
@@ -61,4 +64,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('u-dashboard', UserDashboardController::class);
     Route::resource('u-data', DataController::class);
     Route::resource('u-profile', UserProfileController::class);
+    Route::post('u-isprocessing',[DataController::class,'process'])->name("u-isprocessing");
 });

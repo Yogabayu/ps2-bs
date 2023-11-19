@@ -48,6 +48,7 @@
                                                 placeholder="Waktu Selesai" readonly />
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div class="row">
@@ -267,7 +268,6 @@
     <script src="{{ asset('stisla/library/chart.js/dist/Chart.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('stisla/js/page/index-0.js') }}"></script>
     <script>
         /* Dengan Rupiah */
         var dengan_rupiah = document.getElementById('nominal');
@@ -347,12 +347,70 @@
                 .catch(function(error) {
                     console.error("Error accessing screen: ", error);
                 });
+
+            //update status
+            var formUpdateData = new FormData();
+            formUpdateData.append("isProcessing", 1);
+            formUpdateData.append("_token", "{{ csrf_token() }}");
+
+            fetch("{{ route('u-isprocessing') }}", {
+                    method: "POST",
+                    body: formUpdateData,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data.message);
+
+                    if (data.success) {
+                        console.log('success');
+                        return;
+                    } else {
+                        console.log(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error.message);
+                });
         }
 
         function stopRecording() {
             if (mediaRecorder && mediaRecorder.state === "recording") {
                 mediaRecorder.stop();
             }
+
+            //update status
+            var formUpdateData = new FormData();
+            formUpdateData.append("isProcessing", 0);
+            formUpdateData.append("_token", "{{ csrf_token() }}");
+
+            fetch("{{ route('u-isprocessing') }}", {
+                    method: "POST",
+                    body: formUpdateData,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data.message);
+
+                    if (data.success) {
+                        console.log('success');
+                        return;
+                    } else {
+                        console.log(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error.message);
+                });
         }
 
         function hitungDurasi() {
@@ -438,7 +496,6 @@
                     }
                 })
                 .catch(error => {
-                    console.error("Fetch error:", error.message);
                     if (data.success == false) {
                         Swal.fire({
                             title: "Error!",

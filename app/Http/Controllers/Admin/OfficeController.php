@@ -21,7 +21,7 @@ class OfficeController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
             $datas = Office::with('supervisor')->withCount('users')->get();
             return view("pages.admin.office.index", [
                 'datas' => $datas,
@@ -41,7 +41,7 @@ class OfficeController extends Controller
     {
         $app = Setting::first();
         $users = DB::table('users')->select('uuid','name')->get();
-        $totalActiveTrans = User::where('isActive', 1)->count();
+        $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
         return view('pages.admin.office.action.insert',compact('app','totalActiveTrans','users'));
     }
 
@@ -92,7 +92,7 @@ class OfficeController extends Controller
         try {
             $data = Office::find($id);
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
             $users = DB::table('users')->select('uuid','name')->get();
 
             return view('pages.admin.office.action.update', compact('app','data','totalActiveTrans','users'));

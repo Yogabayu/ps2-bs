@@ -22,7 +22,7 @@ class SubordinateController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
 
             $offices = Office::with('supervisor')->get();
 
@@ -37,7 +37,7 @@ class SubordinateController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
             $office = Office::findOrFail($request->office_id);
             $spv_uuid = $office->supervisor_uuid;
             $spv_data = DB::table('offices')

@@ -11,6 +11,9 @@
         <section class="section">
             <div class="section-header">
                 <h1>Monitoring</h1>
+                <a onclick="window.location.reload();">
+                    <i class="fas fa-rotate"></i>
+                </a>
             </div>
 
             <div class="section-body">
@@ -18,7 +21,6 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-
                                 <div class="table-responsive">
                                     <table class="table-striped table" id="table-1">
                                         <thead>
@@ -37,7 +39,11 @@
                                                         <i class="fas fa-question"></i>
                                                     </a>
                                                 </th>
-                                                <th>Aksi</th>
+                                                <th>Status <a href="#" data-container="body" data-toggle="popover"
+                                                        data-placement="top" data-content="Status Transaksi user">
+                                                        <i class="fas fa-question"></i>
+                                                    </a></th>
+                                                <th>Data Terakhir</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -45,7 +51,7 @@
                                                 $no = 1;
                                             @endphp
                                             @foreach ($userActives as $data)
-                                                <tr>
+                                                <tr class="text-center">
                                                     <td>
                                                         {{ $no++ }}
                                                     </td>
@@ -68,10 +74,24 @@
                                                         {{ $data->totalActivity }}
                                                     </td>
                                                     <td>
-                                                        //URUNG ini belum aksinya
-                                                        <a href="#" class="btn btn-info btn-sm" title="Edit">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
+                                                        @if ($data->isProcessing === 1)
+                                                            Sedang melakukan input data
+                                                        @else
+                                                            Tidak melakukan input data
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <form action="{{ route('last-monitoring') }}" method="POST">
+                                                            @csrf
+                                                            @method('POST')
+
+                                                            <input type="hidden" name="last_uuid"
+                                                                value="{{ $data->uuid }}">
+
+                                                            <button type="submit" class="btn btn-info btn-sm">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -91,9 +111,6 @@
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('stisla/library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
-    {{-- <script src="{{ asset('stisla/js/page/modules-datatables.js') }}"></script> --}}
     <script>
         "use strict";
 

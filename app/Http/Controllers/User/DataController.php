@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Datas;
 use App\Models\Setting;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\UserActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +16,25 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class DataController extends Controller
 {
+
+    public function process(Request $request)
+    {
+        try {
+            User::where('uuid', Auth::user()->uuid)->update(['isProcessing' => $request->isProcessing]);
+
+            return response()->json([
+                'message' => 'Data berhasil disimpan',
+                'success' => true,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false,
+            ]);
+        }
+    }
+
+
     /**
      * Display a listing of the resource.
      */
@@ -97,7 +117,7 @@ class DataController extends Controller
             $data->save();
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,
-                'activity' => 'Melakukan Tambah data, ID : '. $data->id,
+                'activity' => 'Melakukan Tambah data, ID : ' . $data->id,
             ]);
             return response()->json([
                 'message' => 'Data berhasil disimpan',
@@ -145,7 +165,7 @@ class DataController extends Controller
 
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,
-                'activity' => 'Melakukan hapus data : '.$del->customer_name,
+                'activity' => 'Melakukan hapus data : ' . $del->customer_name,
             ]);
 
             if (!empty($del->evidence_file)) {

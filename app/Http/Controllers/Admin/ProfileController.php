@@ -26,7 +26,7 @@ class ProfileController extends Controller
             $profile = User::where('uuid', Auth::user()->uuid)->first();
             $offices = Office::all();
             $positions = Position::all();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
 
             return view("pages.admin.profile.index", compact("app","profile","offices","positions","totalActiveTrans"));
         } catch (\Exception $e) {

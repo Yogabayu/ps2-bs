@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('isActive')->nullable;
-            $table->tinyInteger('isProcessing')->nullable;
+            $table->tinyInteger('isActive')->default(0);
+            $table->tinyInteger('isProcessing')->default(0);
         });
     }
 

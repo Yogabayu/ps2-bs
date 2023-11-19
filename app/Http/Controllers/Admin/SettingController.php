@@ -17,7 +17,7 @@ class SettingController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
             return view("pages.admin.setting.index", compact("app","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');

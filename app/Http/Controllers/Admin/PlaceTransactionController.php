@@ -21,7 +21,7 @@ class PlaceTransactionController extends Controller
         try {
             $datas = Place_transcs::all();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
             return view("pages.admin.place-transc.index", compact("datas","app","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
@@ -35,7 +35,7 @@ class PlaceTransactionController extends Controller
     public function create()
     {
         $app = Setting::first();
-        $totalActiveTrans = User::where('isActive', 1)->count();
+        $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
         return view('pages.admin.place-transc.action.insert', compact('app','totalActivetrans'));
     }
 
@@ -83,7 +83,7 @@ class PlaceTransactionController extends Controller
         try {
             $data = Place_transcs::find($id);
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
 
             return view('pages.admin.place-transc.action.update', compact('app','data','totalActiveTrans'));
         } catch (\Exception $e) {

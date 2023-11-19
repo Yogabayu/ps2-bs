@@ -21,7 +21,7 @@ class PositionController extends Controller
         try {
             $datas = Position::whereNotIn('id', [1])->get();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
             return view("pages.admin.position.index", compact("datas","app","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
@@ -35,7 +35,7 @@ class PositionController extends Controller
     public function create()
     {
         $app = Setting::first();
-        $totalActiveTrans = User::where('isActive', 1)->count();
+        $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
         return view('pages.admin.position.action.insert', compact('app','totalActiveTrans'));
     }
 
@@ -82,7 +82,7 @@ class PositionController extends Controller
         try {
             $data = Position::find($id);
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
 
             return view('pages.admin.position.action.update', compact('data','app','totalActiveTrans'));
         } catch (\Exception $e) {
