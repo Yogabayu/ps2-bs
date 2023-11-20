@@ -17,11 +17,12 @@ class CheckUserRole
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        $user = Auth::user()->with('position')->first();
+        $user = Auth::user()->load('position');
         if ($user->position->id == $role) {
             return $next($request);
+        } else {
+            abort(403,'Unauthorized action.');
         }
 
-        abort(403,'Unauthorized action.');
     }
 }

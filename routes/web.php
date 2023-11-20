@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\TransactionTypeController;
 use App\Http\Controllers\Admin\UserActivityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Spv\DashboardController as SpvDashboardController;
+use App\Http\Controllers\Spv\ListUserController;
+use App\Http\Controllers\Spv\ProfileController as SpvProfileController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\DataController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
@@ -48,14 +51,22 @@ Route::middleware('auth', 'role:1')->group(function () {
     Route::resource('setting-app', SettingController::class);
     Route::resource('profile', ProfileController::class);
     Route::resource('datas', AdminDataController::class);
-    
+
     // monitoring
     Route::resource('monitoring', MonitoringController::class);
-    Route::post('last-monitoring',[MonitoringController::class,'lastData'])->name('last-monitoring');
+    Route::post('last-monitoring', [MonitoringController::class, 'lastData'])->name('last-monitoring');
 
     // subordinate
     Route::resource('subordinate', SubordinateController::class);
     Route::get('detail-subordinate', [SubordinateController::class, 'detail'])->name('detail-subordinate');
+});
+
+//spv
+Route::middleware('auth', 'role:2')->group(function () {    
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('s-dashboard', [SpvDashboardController::class,'index'])->name('s-dashboard');
+    Route::resource('s-profile', SpvProfileController::class);
+    Route::resource('s-listuser',ListUserController::class);
 });
 
 //user
@@ -64,5 +75,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('u-dashboard', UserDashboardController::class);
     Route::resource('u-data', DataController::class);
     Route::resource('u-profile', UserProfileController::class);
-    Route::post('u-isprocessing',[DataController::class,'process'])->name("u-isprocessing");
+    Route::post('u-isprocessing', [DataController::class, 'process'])->name("u-isprocessing");
 });

@@ -1,18 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Spv;
 
 use App\Http\Controllers\Controller;
+use App\Models\Office;
+use App\Models\Position;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserActivity;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class ProfileController extends Controller
+class ListUserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,13 +24,29 @@ class ProfileController extends Controller
     public function index()
     {
         try {
-            $profile = User::where('uuid', Auth::user()->uuid)->first();
+            $datas = DB::table('subordinates as s')
+                ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                ->join('positions as p', 'p.id', '=', 'u.position_id')
+                ->join('offices as o', 'o.id', '=', 'u.office_id')
+                ->where('s.supervisor_id', Auth::user()->uuid)
+                ->select('u.*', 'p.name as namePosition', 'o.name as nameOffice', 'o.code as codeOffice')
+                ->distinct()
+                ->get();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+            $offices = Office::all();
+            $positions = Position::all();
 
-            return view('pages.user.profile', compact('profile', 'app','totalActiveTrans'));
+            return view("pages.spv.listuser.index", [
+                'type_menu' => 'user',
+                'datas' => $datas,
+                'app' => $app,
+                'offices' => $offices,
+                'positions' => $positions,
+                'totalActiveTrans' => $totalActiveTrans,
+            ]);
         } catch (\Exception $e) {
-            Alert::toast($e->getMessage(), 'success');
+            Alert::toast($e->getMessage(), 'error');
             return redirect()->back();
         }
     }
@@ -60,7 +80,6 @@ class ProfileController extends Controller
      */
     public function edit(string $id)
     {
-        //
     }
 
     /**
@@ -70,13 +89,14 @@ class ProfileController extends Controller
     {
         try {
             $request->validate([
-                'photo' => 'mimes:jpeg,jpg,png|max:2048',
+                'photo'         => 'mimes:jpeg,jpg,png|max:2048',
             ]);
-            // dd($request->all());
             $user = User::where('uuid', $uuid)->first();
             $user->nik = $request->nik;
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->office_id = $request->office_id;
+            $user->position_id = $request->position_id;
 
             if ($request->hasFile('photo')) {
                 $oldImage = $user->photo;
@@ -91,7 +111,7 @@ class ProfileController extends Controller
                 $path = $request->file('photo')->move(public_path('file/profile'), $fileimage);
                 $user->photo = $fileimage;
             }
-            if ($request->filled('password')) {
+            if ($request->has('password')) {
                 $user->password = Hash::make($request->password);
             }
 
@@ -101,7 +121,7 @@ class ProfileController extends Controller
                 'activity' => 'melakukan update user : ' . $user->name,
             ]);
             Alert::toast('Berhasil melakukan update user', 'success');
-            return redirect()->route('u-profile.index');
+            return redirect()->route('s-listuser.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -113,6 +133,29 @@ class ProfileController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $user = User::findOrFail($id);
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Melakukan hapus user : ' . $user->name,
+            ]);
+
+            if (!empty($user->photo)) {
+                if ($user->photo && File::exists(public_path('file/profile/' . $user->photo))) {
+                    File::delete(public_path('file/profile/' . $user->photo));
+                }
+            }
+            $user->delete();
+
+            Alert::toast('User berhasil di hapus', 'success');
+            return redirect()->back();
+        } catch (QueryException $e) {
+            Alert::error('Gagal Menghapus data, karena user memiliki data yang masih tertaut di aplikasi ', 'error');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::error($e->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 }

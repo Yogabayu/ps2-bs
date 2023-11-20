@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Spv;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
@@ -24,7 +24,7 @@ class ProfileController extends Controller
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)->count();
 
-            return view('pages.user.profile', compact('profile', 'app','totalActiveTrans'));
+            return view('pages.spv.profile', compact('profile', 'app','totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::toast($e->getMessage(), 'success');
             return redirect()->back();
@@ -101,7 +101,7 @@ class ProfileController extends Controller
                 'activity' => 'melakukan update user : ' . $user->name,
             ]);
             Alert::toast('Berhasil melakukan update user', 'success');
-            return redirect()->route('u-profile.index');
+            return redirect()->route('s-profile.index');
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();

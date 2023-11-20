@@ -30,6 +30,7 @@ class AuthController extends Controller
 
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
+                // dd($user->position_id);
                 if ($user->position_id === 1) {
                     UserActivity::create([
                         'user_uuid' => Auth::user()->uuid,
@@ -41,9 +42,15 @@ class AuthController extends Controller
 
                     Alert::toast('Berhasil masuk sebagai admin', 'success');
                     return redirect()->route('indexAdmin');
-                } elseif ($user->position_id == 2) {
-                    Alert::toast('Error ini error dari controller', 'error');
-                    abort(403, 'Unauthorized action. | spv');
+                } elseif ($user->position_id == 2) {    
+                    //update active
+                    User::where('uuid', Auth::user()->uuid)->update(['isActive' => 1]);
+                    UserActivity::create([
+                        'user_uuid' => Auth::user()->uuid,
+                        'activity' => 'Login ke sistem',
+                    ]);
+                    Alert::toast('Berhasil masuk sebagai user', 'success');
+                    return redirect()->route('s-dashboard');
                 } else {
                     //update active
                     User::where('uuid', Auth::user()->uuid)->update(['isActive' => 1]);
