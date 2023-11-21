@@ -78,6 +78,7 @@ Route::middleware('auth', 'role:2')->group(function () {
     Route::post('s-listuser-rst',[ListUserController::class,'rstpwd'])->name('s-listuser-rst');
 
     Route::resource('s-datas',AllDataController::class);
+    Route::post('s-data-export',[AllDataController::class,'export'])->name('s-data-export');
 
     Route::resource('s-monitoring',SpvMonitoringController::class);
     Route::post('s-last-monitoring', [SpvMonitoringController::class, 'lastData'])->name('s-last-monitoring');

@@ -15,6 +15,6 @@ class DatasExport implements FromView
     public function view(): View
     {
         // dd($this->data);
-        return view('pages.admin.all-data.export.exportAll',["data"=>$this->data]);
+        return view('pages.export.exportAll',["data"=>$this->data]);
     }
 }

@@ -79,7 +79,7 @@ class DataController extends Controller
                     ->get();
 
                 $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.pdf';
-                $pdf = Pdf::loadView('pages.admin.all-data.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
+                $pdf = Pdf::loadView('pages.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
                 
                 UserActivity::create([
                     'user_uuid' => Auth::user()->uuid,
