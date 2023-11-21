@@ -22,11 +22,15 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            // dd(Auth::user()->uuid);
             $now = Carbon::now();
             $month = $now->month;
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = DB::table('subordinates as s')
+                ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                ->where('u.isActive','=',1)
+                ->where('u.position_id','!=',1)
+                ->where('s.supervisor_id', Auth::user()->uuid)
+                ->count();
 
             $totalData = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')

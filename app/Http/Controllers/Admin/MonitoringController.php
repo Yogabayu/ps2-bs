@@ -27,6 +27,7 @@ class MonitoringController extends Controller
                 ->join('user_activities', 'users.uuid', '=', 'user_activities.user_uuid')
                 ->where('users.isActive', '=', 1)
                 ->where('positions.id', '!=', 1)
+                ->where('positions.id', '!=', 2)
                 ->whereDate('user_activities.created_at', now())
                 ->select('users.uuid', 'users.name', 'users.photo', 'users.isProcessing', 'positions.name as position_name', 'offices.name as office_name', DB::raw('count(*) as
             totalActivity'))

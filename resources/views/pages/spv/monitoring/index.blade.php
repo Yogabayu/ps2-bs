@@ -1,16 +1,19 @@
 @extends('layouts.spv.app')
 
-@section('title', 'User')
+@section('title', 'Monitoring')
 
 @push('style')
     <link rel="stylesheet" href="{{ asset('stisla/library/datatables/media/css/jquery.dataTables.min.css') }}">
 @endpush
-{{-- //URUNG tambah reset password  --}}
+
 @section('main')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>User's Menu</h1>
+                <h1>Monitoring</h1>
+                <a onclick="window.location.reload();">
+                    <i class="fas fa-rotate"></i>
+                </a>
             </div>
 
             <div class="section-body">
@@ -18,11 +21,6 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <a href="#">
-                                    <button class="btn btn-primary my-3">
-                                        <i class="fas fa-add"></i> Add user
-                                    </button>
-                                </a>
                                 <div class="table-responsive">
                                     <table class="table-striped table" id="table-1">
                                         <thead>
@@ -32,18 +30,28 @@
                                                 </th>
                                                 <th>Photo</th>
                                                 <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Cabang</th>
+                                                <th>Kantor</th>
                                                 <th>Posisi</th>
-                                                <th>Aksi</th>
+                                                <th>
+                                                    Total Activitas <a href="#" data-container="body"
+                                                        data-toggle="popover" data-placement="top"
+                                                        data-content="Total input data yang dilakukan hari ini">
+                                                        <i class="fas fa-question"></i>
+                                                    </a>
+                                                </th>
+                                                <th>Status <a href="#" data-container="body" data-toggle="popover"
+                                                        data-placement="top" data-content="Status Transaksi user">
+                                                        <i class="fas fa-question"></i>
+                                                    </a></th>
+                                                <th>Data Terakhir</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
                                                 $no = 1;
                                             @endphp
-                                            @foreach ($datas as $data)
-                                                <tr>
+                                            @foreach ($userActives as $data)
+                                                <tr class="text-center">
                                                     <td>
                                                         {{ $no++ }}
                                                     </td>
@@ -57,40 +65,35 @@
                                                         {{ $data->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->email }}
+                                                        {{ $data->office_name }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->codeOffice }} - {{ $data->nameOffice }}
+                                                        {{ $data->position_name }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->namePosition }}
+                                                        {{ $data->totalActivity }}
                                                     </td>
                                                     <td>
-                                                        <form action="{{ route('s-listuser-rst') }}" method="post"
-                                                            style="display: inline;">
+                                                        @if ($data->isProcessing === 1)
+                                                            Sedang melakukan input data
+                                                        @else
+                                                            Tidak melakukan input data
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <form action="{{ route('s-last-monitoring') }}" method="POST">
                                                             @csrf
-                                                            <input type="hidden" name="uuid"
+                                                            @method('POST')
+
+                                                            <input type="hidden" name="last_uuid"
                                                                 value="{{ $data->uuid }}">
-                                                            <button class="btn btn-warning btn-sm" type="submit"
-                                                                title="Reset">
-                                                                <i class="fas fa-arrows-spin"></i>
+
+                                                            <button type="submit" class="btn btn-info btn-sm">
+                                                                <i class="fas fa-eye"></i>
                                                             </button>
                                                         </form>
-                                                        <a class="btn btn-info btn-sm" title="Edit" data-toggle="modal"
-                                                            data-target="#detailModal{{ $data->id }}"
-                                                            data-backdrop="false">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-
-                                                        <button class="btn btn-danger btn-sm" title="Delete"
-                                                            onclick="confirmDelete('{{ route('s-listuser.destroy', $data->id) }}')">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
                                                     </td>
                                                 </tr>
-                                                @include('pages.spv.listuser.modal.edit', [
-                                                    'dataId' => $data->id,
-                                                ])
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -102,14 +105,12 @@
             </div>
         </section>
     </div>
-
 @endsection
 
 @push('scripts')
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('stisla/library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
-
     <script>
         "use strict";
 

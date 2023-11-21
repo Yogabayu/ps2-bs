@@ -28,21 +28,21 @@
             </li>
             <li class="menu-header">Datas</li>
             <li class='{{ Request::is('s-monitoring') ? 'active' : '' }}'>
-                <a class="nav-link {{ Request::is('s-monitoring') || $totalActiveTrans !== 0 ? 'beep beep-sidebar' : '' }}"
-                    href="#">
+                <a class="nav-link {{ $totalActiveTrans !== 0 ? 'beep beep-sidebar' : '' }}"
+                    href="{{ route('s-monitoring.index') }}">
                     <i class="fas fa-magnifying-glass-chart"></i><span>Monitoring</span>
                 </a>
             </li>
 
-            <li class='{{ Request::is('datas') ? 'active' : '' }}'>
-                <a class="nav-link" href="#">
+            <li class='{{ Request::is('s-datas') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('s-datas.index') }}">
                     <i class="fas fa-magnifying-glass-chart"></i><span>All Data</span>
                 </a>
             </li>
 
             <li class="menu-header">Organization</li>
             <li class='{{ Request::is('s-listuser') ? 'active' : '' }}'>
-                <a class="nav-link " href="{{route('s-listuser.index')}}">
+                <a class="nav-link " href="{{ route('s-listuser.index') }}">
                     <i class="fas fa-person"></i><span>List User</span>
                 </a>
             </li>

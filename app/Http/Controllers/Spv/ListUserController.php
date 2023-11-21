@@ -18,6 +18,35 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ListUserController extends Controller
 {
+    public function rstpwd(Request $request)
+    {
+        try {
+            $request->validate([
+                'uuid' => 'required',
+            ]);
+
+            $user = User::where('uuid', $request->uuid)->first();
+
+            if (!$user) {
+                Alert::toast('User not found', 'error');
+                return redirect()->back();
+            }
+
+            $user->password = Hash::make('12345678');
+            $user->save();
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menambahkan user baru : ' . $user->name,
+            ]);
+
+            Alert::toast('Berhasil mereset password', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::toast($e->getMessage(), 'error');
+            return redirect()->back();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,7 +62,12 @@ class ListUserController extends Controller
                 ->distinct()
                 ->get();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+            $totalActiveTrans = DB::table('subordinates as s')
+                ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                ->where('u.isActive','=',1)
+                ->where('u.position_id','!=',1)
+                ->where('s.supervisor_id', Auth::user()->uuid)
+                ->count();
             $offices = Office::all();
             $positions = Position::all();
 

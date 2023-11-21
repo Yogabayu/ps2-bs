@@ -28,7 +28,7 @@
             </li>
             <li class="menu-header">Datas</li>
             <li class='{{ Request::is('monitoring') ? 'active' : '' }}'>
-                <a class="nav-link {{ Request::is('monitoring') || $totalActiveTrans !== 0 ? 'beep beep-sidebar' : '' }}"
+                <a class="nav-link {{ $totalActiveTrans !== 0 ? 'beep beep-sidebar' : '' }}"
                     href="{{ route('monitoring.index') }}">
                     <i class="fas fa-magnifying-glass-chart"></i><span>Monitoring</span>
                 </a>
@@ -56,11 +56,6 @@
                     <i class="fas fa-users"></i><span>Subordinate</span>
                 </a>
             </li>
-            <li class='{{ Request::is('user-activity') ? 'active' : '' }}'>
-                <a class="nav-link" href="{{ route('user-activity.index') }}">
-                    <i class="fas fa-clipboard"></i><span>User Activity</span>
-                </a>
-            </li>
             <li class='{{ Request::is('position') ? 'active' : '' }}'>
                 <a class="nav-link" href="{{ route('position.index') }}">
                     <i class="fas fa-people-arrows"></i><span>Position</span>
@@ -76,6 +71,13 @@
                     <i class="fas fa-circle-info"></i><span>Transaction Type</span>
                 </a>
             </li>
+            <li class='{{ Request::is('user-activity') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('user-activity.index') }}">
+                    <i class="fas fa-clipboard"></i><span>User Activity</span>
+                </a>
+            </li>
+
+
             <li class="menu-header">Setting</li>
             <li class='{{ Request::is('setting-app') ? 'active' : '' }}'>
                 <a class="nav-link" href="{{ route('setting-app.index') }}">

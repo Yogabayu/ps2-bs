@@ -1,16 +1,16 @@
 @extends('layouts.spv.app')
 
-@section('title', 'User')
+@section('title', 'Data')
 
 @push('style')
     <link rel="stylesheet" href="{{ asset('stisla/library/datatables/media/css/jquery.dataTables.min.css') }}">
 @endpush
-{{-- //URUNG tambah reset password  --}}
+
 @section('main')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>User's Menu</h1>
+                <h1>All Datas</h1>
             </div>
 
             <div class="section-body">
@@ -18,11 +18,19 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <a href="#">
-                                    <button class="btn btn-primary my-3">
-                                        <i class="fas fa-add"></i> Add user
-                                    </button>
-                                </a>
+                                <div class="row">
+                                    <a href="#">
+                                        <button class="btn btn-primary my-3">
+                                            <i class="fas fa-add"></i> Add Data
+                                        </button>
+                                    </a>
+                                    <a class="ml-2" data-toggle="modal" data-target="#exportModal" data-backdrop="true"
+                                        data-keyboard="false">
+                                        <button class="btn btn-primary my-3">
+                                            <i class="fas fa-file-export"></i> Export Data
+                                        </button>
+                                    </a>
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table-striped table" id="table-1">
                                         <thead>
@@ -30,65 +38,68 @@
                                                 <th class="text-center">
                                                     No
                                                 </th>
-                                                <th>Photo</th>
                                                 <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Cabang</th>
-                                                <th>Posisi</th>
+                                                <th>Transaksi</th>
+                                                <th>Tanggal</th>
+                                                <th>Nominal</th>
+                                                <th>Nama Nasabah</th>
+                                                <th>Tempat Transaksi</th>
+                                                <th>Hasil</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
                                                 $no = 1;
+                                                use Illuminate\Support\Str;
                                             @endphp
                                             @foreach ($datas as $data)
                                                 <tr>
-                                                    <td>
+                                                    <td class="text-center">
                                                         {{ $no++ }}
                                                     </td>
                                                     <td>
-                                                        <img alt="image"
-                                                            src="{{ asset('file/profile/' . $data->photo) }}"
-                                                            class="rounded-circle" width="35" data-toggle="tooltip"
-                                                            title="{{ $data->name }}">
+                                                        {{ Str::limit($data->username, 10) }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->name }}
+                                                        {{ $data->codeTransaction }} -
+                                                        {{ Str::limit($data->nameTransaction, 5) }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->email }}
+                                                        {{ \Carbon\Carbon::parse($data->date)->format('d-m-Y') }}
+                                                    </td>
+
+                                                    <td>
+                                                        Rp {{ number_format($data->nominal, 0, ',', '.') }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->codeOffice }} - {{ $data->nameOffice }}
+                                                        {{ $data->customer_name }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->namePosition }}
+                                                        {{ $data->ptcode }} &mdash;
+                                                        {{ $data->ptname }}
                                                     </td>
                                                     <td>
-                                                        <form action="{{ route('s-listuser-rst') }}" method="post"
-                                                            style="display: inline;">
-                                                            @csrf
-                                                            <input type="hidden" name="uuid"
-                                                                value="{{ $data->uuid }}">
-                                                            <button class="btn btn-warning btn-sm" type="submit"
-                                                                title="Reset">
-                                                                <i class="fas fa-arrows-spin"></i>
-                                                            </button>
-                                                        </form>
+                                                        @if ($data->result == 1)
+                                                            <span style="color: green;">onTime</span>
+                                                        @else
+                                                            <span style="color: red;">outTime</span>
+                                                        @endif
+                                                    </td>
+
+                                                    <td>
                                                         <a class="btn btn-info btn-sm" title="Edit" data-toggle="modal"
                                                             data-target="#detailModal{{ $data->id }}"
                                                             data-backdrop="false">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-
                                                         <button class="btn btn-danger btn-sm" title="Delete"
-                                                            onclick="confirmDelete('{{ route('s-listuser.destroy', $data->id) }}')">
+                                                            onclick="confirmDelete('{{ route('s-datas.destroy', $data->id) }}')">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
-                                                @include('pages.spv.listuser.modal.edit', [
+                                                @include('pages.spv.all-data.modal.all-data-model', [
                                                     'dataId' => $data->id,
                                                 ])
                                             @endforeach
@@ -101,8 +112,37 @@
                 </div>
             </div>
         </section>
+        <!-- Modal -->
+        <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" style="z-index: 9999">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Export Data</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{-- //URUNG = controller blm dibuat --}}
+                        <form>
+                            <div class="form-group">
+                                <label for="exportType">Select Export Type:</label>
+                                <select class="form-control" name="type" id="type">
+                                    <option value="excel">Excel</option>
+                                    <option value="pdf">PDF</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
 @endsection
 
 @push('scripts')
@@ -110,6 +150,7 @@
     <script src="{{ asset('stisla/library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('stisla/library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
+    <!-- Page Specific JS File -->
     <script>
         "use strict";
 
@@ -120,6 +161,7 @@
             }],
         });
     </script>
+
     <script>
         function confirmDelete(deleteUrl) {
             Swal.fire({

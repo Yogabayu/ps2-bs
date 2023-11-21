@@ -49,7 +49,7 @@ class AuthController extends Controller
                         'user_uuid' => Auth::user()->uuid,
                         'activity' => 'Login ke sistem',
                     ]);
-                    Alert::toast('Berhasil masuk sebagai user', 'success');
+                    Alert::toast('Berhasil masuk sebagai SPV', 'success');
                     return redirect()->route('s-dashboard');
                 } else {
                     //update active

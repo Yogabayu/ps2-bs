@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -22,7 +23,12 @@ class ProfileController extends Controller
         try {
             $profile = User::where('uuid', Auth::user()->uuid)->first();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->count();
+            $totalActiveTrans = DB::table('subordinates as s')
+                ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                ->where('u.isActive','=',1)
+                ->where('u.position_id','!=',1)
+                ->where('s.supervisor_id', Auth::user()->uuid)
+                ->count();
 
             return view('pages.spv.profile', compact('profile', 'app','totalActiveTrans'));
         } catch (\Exception $e) {

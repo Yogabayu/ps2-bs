@@ -66,6 +66,17 @@
                                                         {{ $data->position->name }}
                                                     </td>
                                                     <td>
+                                                        <form action="{{ route('a-rst') }}" method="post"
+                                                            style="display: inline;">
+                                                            @csrf
+                                                            <input type="hidden" name="uuid"
+                                                                value="{{ $data->uuid }}">
+                                                            <button class="btn btn-warning btn-sm" type="submit"
+                                                                title="Reset">
+                                                                <i class="fas fa-arrows-spin"></i>
+                                                            </button>
+                                                        </form>
+
                                                         <a href="{{ route('user.show', $data->id) }}"
                                                             class="btn btn-info btn-sm" title="Edit">
                                                             <i class="fas fa-edit"></i>
@@ -76,6 +87,7 @@
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>

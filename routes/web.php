@@ -13,8 +13,10 @@ use App\Http\Controllers\Admin\TransactionTypeController;
 use App\Http\Controllers\Admin\UserActivityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Spv\AllDataController;
 use App\Http\Controllers\Spv\DashboardController as SpvDashboardController;
 use App\Http\Controllers\Spv\ListUserController;
+use App\Http\Controllers\Spv\MonitoringController as SpvMonitoringController;
 use App\Http\Controllers\Spv\ProfileController as SpvProfileController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\DataController;
@@ -43,6 +45,8 @@ Route::middleware('auth', 'role:1')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('indexAdmin');
 
     Route::resource('user', UserController::class);
+    Route::post('a-rst',[UserController::class,'rstpwd'])->name('a-rst');
+
     Route::resource('user-activity', UserActivityController::class);
     Route::resource('office', OfficeController::class);
     Route::resource('position', PositionController::class);
@@ -66,7 +70,14 @@ Route::middleware('auth', 'role:2')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('s-dashboard', [SpvDashboardController::class,'index'])->name('s-dashboard');
     Route::resource('s-profile', SpvProfileController::class);
+
     Route::resource('s-listuser',ListUserController::class);
+    Route::post('s-listuser-rst',[ListUserController::class,'rstpwd'])->name('s-listuser-rst');
+
+    Route::resource('s-datas',AllDataController::class);
+
+    Route::resource('s-monitoring',SpvMonitoringController::class);
+    Route::post('s-last-monitoring', [SpvMonitoringController::class, 'lastData'])->name('s-last-monitoring');
 });
 
 //user

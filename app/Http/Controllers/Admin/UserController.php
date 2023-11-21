@@ -17,6 +17,35 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    public function rstpwd(Request $request)
+    {
+        try {
+            $request->validate([
+                'uuid' => 'required',
+            ]);
+
+            $user = User::where('uuid', $request->uuid)->first();
+
+            if (!$user) {
+                Alert::toast('User not found', 'error');
+                return redirect()->back();
+            }
+
+            $user->password = Hash::make('12345678');
+            $user->save();
+
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Menambahkan user baru : ' . $user->name,
+            ]);
+
+            Alert::toast('Berhasil mereset password', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::toast($e->getMessage(), 'error');
+            return redirect()->back();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +54,7 @@ class UserController extends Controller
         try {
             $datas = User::with('position', 'office')->get();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
 
             return view("pages.admin.user.index", [
                 'type_menu' => 'user',
@@ -38,7 +67,7 @@ class UserController extends Controller
             return redirect()->back();
         }
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -47,7 +76,7 @@ class UserController extends Controller
         $offices = Office::all();
         $positions = Position::all();
         $app = Setting::first();
-        $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+        $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
         return view('pages.admin.user.action.insert', [
             'offices' => $offices,
             'positions' => $positions,
@@ -55,7 +84,7 @@ class UserController extends Controller
             'totalActiveTrans' => $totalActiveTrans,
         ]);
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -81,7 +110,7 @@ class UserController extends Controller
             $user->position_id  = $request->position_id;
             $user->isActive  = 0;
             $user->password     = Hash::make($request->password);
-            
+
             if ($request->hasFile('photo')) {
                 $imageEXT = $request->file('photo')->getClientOriginalName();
                 $filename = pathinfo($imageEXT, PATHINFO_FILENAME);
@@ -90,14 +119,14 @@ class UserController extends Controller
                 $path = $request->file('photo')->move(public_path('file/profile'), $fileimage);
                 $user->photo = $fileimage;
             }
-            
+
             $user->save();
-            
+
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,
                 'activity' => 'Menambahkan user baru : ' . $user->name,
             ]);
-            
+
             Alert::toast('Berhasil Menambahkan user baru', 'success');
             return redirect()->route('user.index');
         } catch (\Exception $e) {
@@ -116,8 +145,8 @@ class UserController extends Controller
             $offices = Office::all();
             $positions = Position::all();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
-            
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+
             return view('pages.admin.user.action.update', [
                 'user'      => $user,
                 'offices'   => $offices,
@@ -194,7 +223,7 @@ class UserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            
+
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,
                 'activity' => 'Melakukan hapus user : ' . $user->name,
