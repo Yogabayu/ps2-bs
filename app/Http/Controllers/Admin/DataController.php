@@ -48,6 +48,11 @@ class DataController extends Controller
 
                 $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.xlsx';
 
+                UserActivity::create([
+                    'user_uuid' => Auth::user()->uuid,
+                    'activity' => 'Melakukan export excel : ' . $filename,
+                ]);
+
                 return Excel::download(new DatasExport($data), $filename);
             } else {
                 $data = DB::table('datas as d')
@@ -74,7 +79,12 @@ class DataController extends Controller
                     ->get();
 
                 $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.pdf';
-                $pdf = Pdf::loadView('pages.admin.all-data.export.exportAll',['data'=>$data])->setPaper('legal','landscape');
+                $pdf = Pdf::loadView('pages.admin.all-data.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
+                
+                UserActivity::create([
+                    'user_uuid' => Auth::user()->uuid,
+                    'activity' => 'Melakukan export pdf : ' . $filename,
+                ]);
                 return $pdf->download($filename);
             }
         } catch (\Exception $e) {

@@ -20,7 +20,7 @@ class MonitoringController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->where('position_id', '!=', 2)->count();
             $userActives = DB::table('users')
                 ->join('positions', 'users.position_id', '=', 'positions.id')
                 ->join('offices', 'users.office_id', '=', 'offices.id')
