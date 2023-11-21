@@ -22,7 +22,10 @@ class TransactionTypeController extends Controller
         try {
             $app = Setting::first();
             $datas = Transaction::with('position')->get();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
             return view("pages.admin.transc-type.index", compact("app","datas","totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
@@ -38,7 +41,10 @@ class TransactionTypeController extends Controller
         try {
             $positions = Position::whereNotIn('id', [1, 2])->get();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
             return view('pages.admin.transc-type.action.insert', compact('app','positions','totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
@@ -96,7 +102,10 @@ class TransactionTypeController extends Controller
             $positions = Position::whereNotIn('id', [1, 2])->get();
             $type = Transaction::find($id);
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
 
             return view('pages.admin.transc-type.action.update', compact('positions','app','type','totalActiveTrans'));
         } catch (\Exception $e) {

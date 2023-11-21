@@ -22,8 +22,10 @@ class SubordinateController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
-
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
             $offices = Office::with('supervisor')->get();
 
             return view('pages.admin.subordinate.index', compact('app', 'totalActiveTrans', 'offices'));
@@ -37,7 +39,10 @@ class SubordinateController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
             $office = Office::findOrFail($request->office_id);
             $spv_uuid = $office->supervisor_uuid;
             $spv_data = DB::table('offices')

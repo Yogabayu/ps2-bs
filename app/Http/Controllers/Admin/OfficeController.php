@@ -21,7 +21,10 @@ class OfficeController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
             $datas = Office::with('supervisor')->withCount('users')->get();
             return view("pages.admin.office.index", [
                 'datas' => $datas,
@@ -40,9 +43,12 @@ class OfficeController extends Controller
     public function create()
     {
         $app = Setting::first();
-        $users = DB::table('users')->select('uuid','name')->get();
-        $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
-        return view('pages.admin.office.action.insert',compact('app','totalActiveTrans','users'));
+        $users = DB::table('users')->select('uuid', 'name')->get();
+        $totalActiveTrans = User::where('isActive', 1)
+            ->where('position_id', '!=', 1)
+            ->where('position_id', '!=', 2)
+            ->count();
+        return view('pages.admin.office.action.insert', compact('app', 'totalActiveTrans', 'users'));
     }
 
     /**
@@ -50,7 +56,6 @@ class OfficeController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
             $request->validate([
                 'code' => "required",
@@ -92,10 +97,13 @@ class OfficeController extends Controller
         try {
             $data = Office::find($id);
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
-            $users = DB::table('users')->select('uuid','name')->get();
+            $totalActiveTrans = User::where('isActive', 1)
+                    ->where('position_id', '!=', 1)
+                    ->where('position_id', '!=', 2)
+                    ->count();
+            $users = DB::table('users')->select('uuid', 'name')->get();
 
-            return view('pages.admin.office.action.update', compact('app','data','totalActiveTrans','users'));
+            return view('pages.admin.office.action.update', compact('app', 'data', 'totalActiveTrans', 'users'));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -133,7 +141,6 @@ class OfficeController extends Controller
     public function destroy(string $id)
     {
         try {
-            
             $del = Office::find($id);
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,

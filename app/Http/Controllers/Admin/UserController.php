@@ -54,7 +54,10 @@ class UserController extends Controller
         try {
             $datas = User::with('position', 'office')->get();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
 
             return view("pages.admin.user.index", [
                 'type_menu' => 'user',
@@ -76,7 +79,10 @@ class UserController extends Controller
         $offices = Office::all();
         $positions = Position::all();
         $app = Setting::first();
-        $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+        $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
         return view('pages.admin.user.action.insert', [
             'offices' => $offices,
             'positions' => $positions,
@@ -145,7 +151,10 @@ class UserController extends Controller
             $offices = Office::all();
             $positions = Position::all();
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
 
             return view('pages.admin.user.action.update', [
                 'user'      => $user,

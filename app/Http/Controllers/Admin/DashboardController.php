@@ -17,12 +17,14 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         try {
-            // dd($request->all());
             $app = Setting::first();
             $totalAdmin = User::where('position_id', 1)->count();
             $totalSPV = User::where('position_id', 2)->count();
             $totalUser = User::whereNotIn('position_id', [1, 2])->count();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id','!=',1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                    ->where('position_id', '!=', 1)
+                    ->where('position_id', '!=', 2)
+                    ->count();
             $totalOnTime = Datas::where('result', 1)->count();
             $totalOutTime = Datas::where('result', 0)->count();
             $userActivities = UserActivity::with('user')->limit(5)->orderBy('id', 'DESC')->get();
@@ -50,9 +52,6 @@ class DashboardController extends Controller
                     ->get();
             }
 
-
-
-            // dd($dataGrafikChart);
             return view('pages.admin.dashboard', [
                 'type_menu' => 'dashboard',
                 'app' => $app,

@@ -20,7 +20,10 @@ class MonitoringController extends Controller
     {
         try {
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->where('position_id', '!=', 2)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                    ->where('position_id', '!=', 1)
+                    ->where('position_id', '!=', 2)
+                    ->count();
             $userActives = DB::table('users')
                 ->join('positions', 'users.position_id', '=', 'positions.id')
                 ->join('offices', 'users.office_id', '=', 'offices.id')
@@ -43,14 +46,12 @@ class MonitoringController extends Controller
 
     public function lastData(Request $request)
     {
-        //URUNG tinggal buat viewnya
         try {
-            
-            // $datas =
-            //     Datas::with('user', 'transaction', 'placeTransc')->orderBy('created_at', 'desc')->get();
-            
             $app = Setting::first();
-            $totalActiveTrans = User::where('isActive', 1)->where('position_id', '!=', 1)->count();
+            $totalActiveTrans = User::where('isActive', 1)
+                    ->where('position_id', '!=', 1)
+                    ->where('position_id', '!=', 2)
+                    ->count();
             $data = DB::table('datas')
                 ->join('users', 'users.uuid','=', 'datas.user_uuid')
                 ->join('transactions', 'transactions.id','=', 'datas.transc_id')
@@ -61,7 +62,6 @@ class MonitoringController extends Controller
                 ->first();
 
             if ($data) {
-                // dd($data);
                 return view('pages.admin.monitoring.detail',compact('data','app','totalActiveTrans'));
             } else {
                 Alert::toast('Data tidak ditemukan', 'error');
