@@ -116,30 +116,33 @@
         <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true" style="z-index: 9999">
             <div class="modal-dialog " role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Export Data</h5>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        {{-- //URUNG = controller blm dibuat --}}
-                        <form>
+                <form action="{{ route('a-export') }}" method="post">
+                    @csrf
+                    @method('post')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Export Data</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{-- //URUNG = controller blm dibuat --}}
+
                             <div class="form-group">
                                 <label for="exportType">Select Export Type:</label>
                                 <select class="form-control" name="type" id="type">
-                                    <option value="excel">Excel</option>
-                                    <option value="pdf">PDF</option>
+                                    <option value="1">Excel</option>
+                                    <option value="2">PDF</option>
                                 </select>
                             </div>
-                        </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

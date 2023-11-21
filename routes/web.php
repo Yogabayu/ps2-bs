@@ -54,7 +54,10 @@ Route::middleware('auth', 'role:1')->group(function () {
     Route::resource('transc-type', TransactionTypeController::class);
     Route::resource('setting-app', SettingController::class);
     Route::resource('profile', ProfileController::class);
+
+    //data
     Route::resource('datas', AdminDataController::class);
+    Route::post('a-export',[AdminDataController::class,'export'])->name('a-export');
 
     // monitoring
     Route::resource('monitoring', MonitoringController::class);
