@@ -35,10 +35,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('guest')->group(function () {
-    Route::get('/', [AuthController::class, 'index']);
-    Route::post('login', [AuthController::class, 'login'])->name('login');
-    
 });
+
+
+Route::get('/', [AuthController::class, 'index']);
+Route::post('login', [AuthController::class, 'login'])->name('login');
+
+//forgt-password
+Route::get('forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
+Route::post('forgot-password-action', [AuthController::class, 'forgotaction'])->name('forgot-password-action');
+Route::get('forgot-email/{token}', [AuthController::class, 'verifyForgot'])->name('forgot-email');
 
 // admin
 Route::middleware('auth', 'role:1')->group(function () {
@@ -46,7 +52,7 @@ Route::middleware('auth', 'role:1')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('indexAdmin');
 
     Route::resource('user', UserController::class);
-    Route::post('a-rst',[UserController::class,'rstpwd'])->name('a-rst');
+    Route::post('a-rst', [UserController::class, 'rstpwd'])->name('a-rst');
 
     Route::resource('user-activity', UserActivityController::class);
     Route::resource('office', OfficeController::class);
@@ -58,7 +64,7 @@ Route::middleware('auth', 'role:1')->group(function () {
 
     //data
     Route::resource('datas', AdminDataController::class);
-    Route::post('a-export',[AdminDataController::class,'export'])->name('a-export');
+    Route::post('a-export', [AdminDataController::class, 'export'])->name('a-export');
 
     // monitoring
     Route::resource('monitoring', MonitoringController::class);
@@ -70,18 +76,18 @@ Route::middleware('auth', 'role:1')->group(function () {
 });
 
 //spv
-Route::middleware('auth', 'role:2')->group(function () {    
+Route::middleware('auth', 'role:2')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('s-dashboard', [SpvDashboardController::class,'index'])->name('s-dashboard');
+    Route::get('s-dashboard', [SpvDashboardController::class, 'index'])->name('s-dashboard');
     Route::resource('s-profile', SpvProfileController::class);
 
-    Route::resource('s-listuser',ListUserController::class);
-    Route::post('s-listuser-rst',[ListUserController::class,'rstpwd'])->name('s-listuser-rst');
+    Route::resource('s-listuser', ListUserController::class);
+    Route::post('s-listuser-rst', [ListUserController::class, 'rstpwd'])->name('s-listuser-rst');
 
-    Route::resource('s-datas',AllDataController::class);
-    Route::post('s-data-export',[AllDataController::class,'export'])->name('s-data-export');
+    Route::resource('s-datas', AllDataController::class);
+    Route::post('s-data-export', [AllDataController::class, 'export'])->name('s-data-export');
 
-    Route::resource('s-monitoring',SpvMonitoringController::class);
+    Route::resource('s-monitoring', SpvMonitoringController::class);
     Route::post('s-last-monitoring', [SpvMonitoringController::class, 'lastData'])->name('s-last-monitoring');
 });
 

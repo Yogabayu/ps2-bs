@@ -22,7 +22,9 @@ class User extends Authenticatable
         'office_id',
         'position_id',
         'isActive',
-        'isProcessing'
+        'isProcessing',
+        'token',
+        'token_expires_at',
     ];
 
     protected $hidden = [
