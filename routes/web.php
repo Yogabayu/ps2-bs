@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PlaceTransactionController;
 use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\SsoController;
 use App\Http\Controllers\Admin\SubordinateController;
 use App\Http\Controllers\Admin\TransactionTypeController;
 use App\Http\Controllers\Admin\UserActivityController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Spv\DashboardController as SpvDashboardController;
 use App\Http\Controllers\Spv\ListUserController;
 use App\Http\Controllers\Spv\MonitoringController as SpvMonitoringController;
 use App\Http\Controllers\Spv\ProfileController as SpvProfileController;
+use App\Http\Controllers\Sso\DatasController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\DataController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
@@ -69,6 +71,9 @@ Route::middleware('auth', 'role:1')->group(function () {
     // subordinate
     Route::resource('subordinate', SubordinateController::class);
     Route::get('detail-subordinate', [SubordinateController::class, 'detail'])->name('detail-subordinate');
+
+    //sso
+    Route::resource('sso',SsoController::class);
 });
 
 //spv
@@ -95,3 +100,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('u-profile', UserProfileController::class);
     Route::post('u-isprocessing', [DataController::class, 'process'])->name("u-isprocessing");
 });
+

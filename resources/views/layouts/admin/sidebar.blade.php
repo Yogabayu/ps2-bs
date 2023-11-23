@@ -84,11 +84,11 @@
                     <i class="fas fa-gears"></i><span>Application</span>
                 </a>
             </li>
-            {{-- <li class='{{ Request::is('sso') ? 'active' : '' }}'>
-                <a class="nav-link" href="#">
+            <li class='{{ Request::is('sso') ? 'active' : '' }}'>
+                <a class="nav-link" href="{{ route('sso.index') }}">
                     <i class="fas fa-file-shield"></i><span>SSO</span>
                 </a>
-            </li> --}}
+            </li>
         </ul>
     </aside>
 </div>
