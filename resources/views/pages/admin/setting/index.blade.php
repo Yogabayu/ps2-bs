@@ -3,6 +3,10 @@
 @section('title', 'Setting')
 
 @push('style')
+    <link rel="stylesheet" href="{{ asset('stisla/library/summernote/dist/summernote-bs4.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/library/codemirror/lib/codemirror.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/library/codemirror/theme/duotone-dark.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/library/selectric/public/selectric.css') }}">
 @endpush
 @section('main')
     <div class="main-content">
@@ -44,9 +48,26 @@
                                                     <i class="fas fa-image"></i>
                                                 </div>
                                             </div>
-                                            <input type="file" class="form-control" name="logo" required
+                                            <input type="file" class="form-control" name="logo"
                                                 accept="image/jpeg, image/png">
                                         </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Version</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-code-compare"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" name="version"
+                                                value="{{ $app->version }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Deskripsi</label>
+                                        <textarea class="summernote" name="desc">{{ $app->desc }}</textarea>
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">
@@ -64,4 +85,8 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('stisla/library/summernote/dist/summernote-bs4.js') }}"></script>
+    <script src="{{ asset('stisla/library/codemirror/lib/codemirror.js') }}"></script>
+    <script src="{{ asset('stisla/library/codemirror/mode/javascript/javascript.js') }}"></script>
+    <script src="{{ asset('stisla/library/selectric/public/jquery.selectric.min.js') }}"></script>
 @endpush

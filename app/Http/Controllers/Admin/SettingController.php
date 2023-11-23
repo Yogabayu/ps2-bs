@@ -16,12 +16,12 @@ class SettingController extends Controller
     public function index()
     {
         try {
-            $app = Setting::first();
+            $app = Setting::latest()->first();
             $totalActiveTrans = User::where('isActive', 1)
                 ->where('position_id', '!=', 1)
                 ->where('position_id', '!=', 2)
                 ->count();
-            return view("pages.admin.setting.index", compact("app","totalActiveTrans"));
+            return view("pages.admin.setting.index", compact("app", "totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
             return redirect()->back();
@@ -57,23 +57,33 @@ class SettingController extends Controller
     {
         try {
             $setting = Setting::find($id);
-            $setting->name_app = $request->name_app;
+            if ($setting->version != $request->version) {
+                $newVersion = new Setting();
+                $newVersion->name_app = $request->name_app;
+                $newVersion->version = $request->version;
+                $newVersion->logo = $setting->logo;
+                $newVersion->desc = $request->desc;
+                $newVersion->save();
+            } else {
+                $setting->name_app = $request->name_app;
+                $setting->version = $request->version;
+                $setting->desc = $request->desc;
 
-            if ($request->hasFile('logo')) {
-                $oldImage = $setting->logo;
-                if ($oldImage && File::exists(public_path('file/setting/' . $oldImage))) {
-                    File::delete(public_path('file/setting/' . $oldImage));
+                if ($request->hasFile('logo')) {
+                    $oldImage = $setting->logo;
+                    if ($oldImage && File::exists(public_path('file/setting/' . $oldImage))) {
+                        File::delete(public_path('file/setting/' . $oldImage));
+                    }
+
+                    $imageEXT = $request->file('logo')->getClientOriginalName();
+                    $filename = pathinfo($imageEXT, PATHINFO_FILENAME);
+                    $EXT = $request->file('logo')->getClientOriginalExtension();
+                    $fileimage = $filename . '_' . time() . '.' . $EXT;
+                    $path = $request->file('logo')->move(public_path('file/setting'), $fileimage);
+                    $setting->logo = $fileimage;
                 }
-
-                $imageEXT = $request->file('logo')->getClientOriginalName();
-                $filename = pathinfo($imageEXT, PATHINFO_FILENAME);
-                $EXT = $request->file('logo')->getClientOriginalExtension();
-                $fileimage = $filename . '_' . time() . '.' . $EXT;
-                $path = $request->file('logo')->move(public_path('file/setting'), $fileimage);
-                $setting->logo = $fileimage;
+                $setting->save();
             }
-            $setting->save();
-
             UserActivity::create([
                 'user_uuid' => Auth::user()->uuid,
                 'activity' => 'Melakukan Update setting',

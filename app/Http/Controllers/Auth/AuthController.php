@@ -65,7 +65,7 @@ class AuthController extends Controller
 
         $expiresAt = Carbon::parse($user->token_expires_at);
 
-        // Check if the token is within the valid 30-minute period
+        
         if ($expiresAt->lt(Carbon::now()) || $expiresAt->gt(Carbon::now()->addMinutes(30))) {
             Alert::toast('Token Sudah Kadaluarsa', 'error');
             return redirect('/');
