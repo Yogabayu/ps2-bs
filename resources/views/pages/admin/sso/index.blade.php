@@ -60,14 +60,17 @@
                                                         {{ $data->end }}
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('sso.show', $data->id) }}"
-                                                            class="btn btn-info btn-sm" title="Edit">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <button class="btn btn-danger btn-sm" title="Delete"
-                                                            onclick="confirmDelete('{{ route('sso.destroy', $data->id) }}')">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
+                                                        <div class="row">
+
+                                                            <a href="{{ route('sso.show', $data->id) }}"
+                                                                class="btn btn-info btn-sm mr-1" title="Edit">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            <button class="btn btn-danger btn-sm" title="Delete"
+                                                                onclick="confirmDelete('{{ route('sso.destroy', $data->id) }}')">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
 
                                                 </tr>
