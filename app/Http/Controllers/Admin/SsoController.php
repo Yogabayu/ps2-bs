@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\Sso;
+use App\Models\SsoActivity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -77,7 +78,19 @@ class SsoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $datas = SsoActivity::where('sso_id',$id)->get();
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
+
+            return view('pages.admin.sso.detail-activity',compact('datas','app','totalActiveTrans'));
+        } catch (\Exception $e) {
+            Alert::toast($e->getMessage(),'error');
+            return redirect()->back();
+        }
     }
 
     /**

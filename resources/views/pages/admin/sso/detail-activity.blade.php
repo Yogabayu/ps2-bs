@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', 'SSO')
+@section('title', 'SSO Detail')
 
 @push('style')
     <link rel="stylesheet" href="{{ asset('stisla/library/datatables/media/css/jquery.dataTables.min.css') }}">
@@ -10,6 +10,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
+
+                <a href="{{ route('sso.index') }}">
+                    <button class="btn btn-secondary mr-2"> <i class="fas fa-arrow-left mr-2"></i></button>
+                </a>
                 <h1>SSO's Menu</h1>
             </div>
 
@@ -18,12 +22,6 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <a class="ml-2" data-toggle="modal" data-target="#insertModal" data-backdrop="true"
-                                    data-keyboard="false">
-                                    <button class="btn btn-primary my-3">
-                                        <i class="fas fa-plus"></i> Add Data
-                                    </button>
-                                </a>
                                 <div class="table-responsive">
                                     <table class="table-striped table" id="table-1">
                                         <thead>
@@ -31,11 +29,9 @@
                                                 <th class="text-center">
                                                     No
                                                 </th>
-                                                <th>User</th>
-                                                <th>Token</th>
-                                                <th>Start</th>
-                                                <th>End</th>
-                                                <th>Aksi</th>
+                                                <th>Ip Address</th>
+                                                <th>Activity</th>
+                                                {{-- <th>Aksi</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -48,27 +44,17 @@
                                                         {{ $no++ }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->username }}
+                                                        {{ $data->ip_address }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->session_token }}
+                                                        {{ $data->activity }}
                                                     </td>
-                                                    <td>
-                                                        {{ $data->start }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $data->end }}
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ route('sso.show', $data->id) }}"
-                                                            class="btn btn-info btn-sm" title="Edit">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
+                                                    {{-- <td>
                                                         <button class="btn btn-danger btn-sm" title="Delete"
                                                             onclick="confirmDelete('{{ route('sso.destroy', $data->id) }}')">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
-                                                    </td>
+                                                    </td> --}}
 
                                                 </tr>
                                             @endforeach
@@ -83,60 +69,6 @@
         </section>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true" style="z-index: 9999">
-        <div class="modal-dialog " role="document">
-            <form action="{{ route('sso.store') }}" method="post">
-                @csrf
-                @method('post')
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">New Data</h5>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="exportType">User:</label>
-                            <select class="form-control" name="user_uuid" id="user_uuid">
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->uuid }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="exportType">Start:</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <i class="fas fa-date"></i>
-                                    </div>
-                                </div>
-                                <input type="date" class="form-control" placeholder="start" name="start" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="exportType">End:</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <i class="fas fa-date"></i>
-                                    </div>
-                                </div>
-                                <input type="date" class="form-control" placeholder="end" name="end" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 @endsection
 
 @push('scripts')

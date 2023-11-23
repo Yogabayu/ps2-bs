@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sso;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sso;
+use App\Models\SsoActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,12 @@ class DatasController extends Controller
                     ->where('position_id', '!=', 1)
                     ->select('users.*')
                     ->get();
+
+                SsoActivity::create([
+                    'sso_id' => $sso->id,
+                    'activity' => 'get data all user ',
+                    'ip_address' => $request->getClientIp(),
+                ]);
 
                 return response()->json([
                     'error' => false,
