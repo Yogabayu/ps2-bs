@@ -1,6 +1,6 @@
-@extends('layouts.user.app')
+@extends('layouts.admin.app')
 
-@section('title', 'User')
+@section('title', 'Insert data')
 
 @push('style')
     <link rel="stylesheet" href="{{ asset('stisla/library/jqvmap/dist/jqvmap.min.css') }}">
@@ -18,9 +18,6 @@
                     <div class="card">
                         <form id="waktuForm">
                             @csrf
-                            <div class="card-header">
-                                <h4>Input Data</h4>
-                            </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-6 col-12">
@@ -148,107 +145,6 @@
                                 <button type="button" class="btn btn-primary" onclick="hitungDurasi()">Simpan</button>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="section">
-            <div class="section-header">
-                <h1>Ringkasan</h1>
-            </div>
-            <div class="row">
-                {{-- total data --}}
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <a href="#">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-primary">
-                                <i class="far fa-clock"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total Data</h4>
-                                </div>
-                                <div class="card-body">
-                                    {{ $totalData }}
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {{-- total bulan ini --}}
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <a href="#">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-primary">
-                                <i class="far fa-clock"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total Bulan Ini</h4>
-                                </div>
-                                <div class="card-body">
-                                    {{ $totalThisMonth }}
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {{-- total bulan onTime --}}
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <a href="#">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-success">
-                                <i class="far fa-clock"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total OnTime</h4>
-                                </div>
-                                <div class="card-body">
-                                    {{ $totalResult1 }}
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {{-- total bulan outTime --}}
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <a href="#">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-danger">
-                                <i class="far fa-clock"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4>Total OutTime</h4>
-                                </div>
-                                <div class="card-body">
-                                    {{ $totalResult0 }}
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-6 col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Grafik Input Data Perbulan</h4>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="grafik1"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Grafik Total Data berdasarkan hasil akhir</h4>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="pieChart"></canvas>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -505,81 +401,5 @@
                     }
                 });
         }
-    </script>
-
-    {{-- chartJS --}}
-    <script>
-        "use strict";
-
-        var ctx = document.getElementById("grafik1").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: {!! json_encode($dataGrafikChart->pluck('month')->toArray()) !!},
-                datasets: [{
-                    label: 'input perbulan: ',
-                    data: {!! json_encode($dataGrafikChart->pluck('total')->toArray()) !!},
-                    borderWidth: 2,
-                    backgroundColor: '#6777ef',
-                    borderColor: '#6777ef',
-                    borderWidth: 2.5,
-                    pointBackgroundColor: '#ffffff',
-                    pointRadius: 4
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                scales: {
-                    yAxes: [{
-                        gridLines: {
-                            drawBorder: false,
-                            color: '#f2f2f2',
-                        },
-                        ticks: {
-                            beginAtZero: true,
-                            stepSize: 150
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            display: false
-                        },
-                        gridLines: {
-                            display: false
-                        }
-                    }]
-                },
-            }
-        });
-
-        var ctx = document.getElementById("pieChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: [
-                        {!! $dataGrafikChartPie->pluck('ontime')->first() ?? 0 !!},
-                        {!! $dataGrafikChartPie->pluck('outtime')->first() ?? 0 !!},
-                    ],
-                    backgroundColor: [
-                        '#63ed7a',
-                        '#fc544b',
-                    ],
-                    label: 'Dataset 1'
-                }],
-                labels: [
-                    'onTime',
-                    'outTime',
-                ],
-            },
-            options: {
-                responsive: true,
-                legend: {
-                    position: 'bottom',
-                },
-            }
-        });
     </script>
 @endpush

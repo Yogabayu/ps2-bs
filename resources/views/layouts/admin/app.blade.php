@@ -66,6 +66,38 @@
     <script src="{{ asset('stisla/library/jquery.nicescroll/dist/jquery.nicescroll.min.js') }}"></script>
     <script src="{{ asset('stisla/library/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('stisla/js/stisla.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            window.addEventListener('beforeunload', function(event) {
+                $.ajax({
+                    url: 'logoutOnTabClose',
+                    method: 'GET',
+                    data: {},
+                    success: function(response) {
+                        // Handle the success response if needed
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error if needed
+                    }
+                });
+            });
+
+            window.addEventListener('unload', function(event) {
+                $.ajax({
+                    url: 'logoutOnTabClose',
+                    method: 'GET',
+                    data: {},
+                    success: function(response) {
+                        // Handle the success response if needed
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error if needed
+                    }
+                });
+            });
+        });
+    </script>
+
 
     @stack('scripts')
 

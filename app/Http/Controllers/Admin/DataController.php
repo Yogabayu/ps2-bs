@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\DatasExport;
 use App\Http\Controllers\Controller;
 use App\Models\Datas;
+use App\Models\Place_transcs;
 use App\Models\Setting;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserActivity;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -80,7 +82,7 @@ class DataController extends Controller
 
                 $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.pdf';
                 $pdf = Pdf::loadView('pages.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
-                
+
                 UserActivity::create([
                     'user_uuid' => Auth::user()->uuid,
                     'activity' => 'Melakukan export pdf : ' . $filename,
@@ -101,9 +103,9 @@ class DataController extends Controller
         try {
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)
-                    ->where('position_id', '!=', 1)
-                    ->where('position_id', '!=', 2)
-                    ->count();
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
             $datas =
                 Datas::with('user', 'transaction', 'placeTransc')->orderBy('created_at', 'desc')->get();
 
@@ -119,7 +121,20 @@ class DataController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            $app = Setting::first();
+            $totalActiveTrans = User::where('isActive', 1)
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
+            $transactions = Transaction::all();
+            $places = Place_transcs::all();
+
+            return view('pages.admin.all-data.insert',compact('transactions','places','app','totalActiveTrans'));
+        } catch (\Exception $e) {
+            Alert::toast($e->getMessage(),'error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -127,7 +142,70 @@ class DataController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                "user_uuid" => "required",
+                "transc_id" => "required",
+                "place_transc_id" => "required",
+                "date" => "required",
+                "start" => "required",
+                "end" => "required",
+                "nominal" => "required",
+                "customer_name" => "required",
+                "evidence_file" => "required",
+            ]);
+
+            //calculate result
+            $startDateTime = Carbon::parse($request->date . ' ' . $request->start);
+            $endDateTime = Carbon::parse($request->date . ' ' . $request->end);
+
+            $timeDifferenceInSeconds = $startDateTime->diffInSeconds($endDateTime);
+
+            $trans = Transaction::find($request->transc_id);
+            $maxTimeInSeconds = Carbon::parse($trans->max_time)->diffInSeconds(Carbon::parse('00:00:00'));
+
+            //send data
+            $data                   = new Datas();
+            $data->user_uuid        = $request->user_uuid;
+            $data->transc_id        = $request->transc_id;
+            $data->place_transc_id  = $request->place_transc_id;
+            $data->date             = $request->date;
+            $data->start            = $request->start;
+            $data->end              = $request->end;
+            $data->nominal          = preg_replace("/[^0-9]/", "", $request->nominal);;
+            $data->customer_name    = $request->customer_name;
+            $data->isActive         = 0;
+
+            //upload file
+            $imageEXT = $request->file('evidence_file')->getClientOriginalName();
+            $filename = pathinfo($imageEXT, PATHINFO_FILENAME);
+            $EXT = $request->file('evidence_file')->getClientOriginalExtension();
+            $fileimage = $filename . '_' . time() . '.' . $EXT;
+            $path = $request->file('evidence_file')->move(public_path('file/datas'), $fileimage);
+            $data->evidence_file = $fileimage;
+
+            //calculate result
+            if ($timeDifferenceInSeconds > $maxTimeInSeconds) {
+                $data->result = 0;
+            } else {
+                $data->result = 1;
+            }
+
+            $data->save();
+            UserActivity::create([
+                'user_uuid' => Auth::user()->uuid,
+                'activity' => 'Melakukan Tambah data, ID : ' . $data->id,
+            ]);
+            return response()->json([
+                'message' => 'Data berhasil disimpan',
+                'success' => true,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false,
+            ]);
+        }
     }
 
     /**

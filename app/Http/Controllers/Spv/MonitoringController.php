@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Spv;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,23 +20,26 @@ class MonitoringController extends Controller
     {
         try {
             $app = Setting::first();
+            
+            $today = Carbon::today();
             $totalActiveTrans = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
                 ->where('u.isActive','=',1)
                 ->where('u.position_id','!=',1)
+                ->where('u.position_id','!=',2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
             $userActives = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->join('datas as d', 'd.user_uuid', '=', 'u.uuid')
                 ->join('positions as p', 'p.id', '=', 'u.position_id')
                 ->join('offices as o', 'o.id', '=', 'u.office_id')
+                ->join('user_activities as ua', 'u.uuid', '=', 'ua.user_uuid')
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->where('u.isActive', '=', 1)
                 ->where('p.id', '!=', 1)
                 ->where('p.id', '!=', 2)
-                ->whereDate('d.created_at', '=', now())
-                ->select('u.uuid', 'u.name', 'u.photo', 'u.isProcessing', 'p.name as position_name', 'o.name as office_name', DB::raw('count(d.id) as totalActivity'))
+                ->whereDate('ua.created_at', '=', now())
+                ->select('u.uuid', 'u.name', 'u.photo', 'u.isProcessing', 'p.name as position_name', 'o.name as office_name', DB::raw('count(ua.id) as totalActivity'))
                 ->groupBy('u.uuid', 'u.name', 'u.photo', 'u.isProcessing', 'p.name', 'office_name')
                 ->get();
 
@@ -54,6 +58,7 @@ class MonitoringController extends Controller
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
                 ->where('u.isActive','=',1)
                 ->where('u.position_id','!=',1)
+                ->where('u.position_id','!=',2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
             $data = DB::table('datas')

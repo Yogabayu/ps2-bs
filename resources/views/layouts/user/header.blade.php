@@ -21,6 +21,9 @@
                 <a href="{{ route('logout') }}" class="dropdown-item has-icon text-danger">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
+                {{-- <a href="{{ route('logoutOnTabClose') }}" class="dropdown-item has-icon text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout tab
+                </a> --}}
             </div>
         </li>
     </ul>

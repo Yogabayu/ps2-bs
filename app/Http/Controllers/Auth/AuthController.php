@@ -65,7 +65,7 @@ class AuthController extends Controller
 
         $expiresAt = Carbon::parse($user->token_expires_at);
 
-        
+
         if ($expiresAt->lt(Carbon::now()) || $expiresAt->gt(Carbon::now()->addMinutes(30))) {
             Alert::toast('Token Sudah Kadaluarsa', 'error');
             return redirect('/');
@@ -103,7 +103,6 @@ class AuthController extends Controller
 
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                // dd($user->position_id);
                 if ($user->position_id === 1) {
                     UserActivity::create([
                         'user_uuid' => Auth::user()->uuid,
@@ -116,6 +115,7 @@ class AuthController extends Controller
                     Alert::toast('Berhasil masuk sebagai admin', 'success');
                     return redirect()->route('indexAdmin');
                 } elseif ($user->position_id == 2) {
+
                     //update active
                     User::where('uuid', Auth::user()->uuid)->update(['isActive' => 1]);
                     UserActivity::create([
@@ -153,5 +153,15 @@ class AuthController extends Controller
         User::where('uuid', Auth::user()->uuid)->update(['isActive' => 0]);
         Auth::logout();
         return redirect('/');
+    }
+
+    public function logoutOnTabClose(Request $request)
+    {
+        User::where('uuid', Auth::user()->uuid)->update(['isActive' => 0]);
+
+        return response()->json([
+            'message' => 'User marked as inactive.',
+            'success'=>true
+        ]);
     }
 }

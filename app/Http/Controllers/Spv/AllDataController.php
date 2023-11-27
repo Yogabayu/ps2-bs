@@ -75,8 +75,9 @@ class AllDataController extends Controller
             $app = Setting::first();
             $totalActiveTrans = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->where('u.isActive', '=', 1)
-                ->where('u.position_id', '!=', 1)
+                ->where('u.isActive','=',1)
+                ->where('u.position_id','!=',1)
+                ->where('u.position_id','!=',2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
             $datas = DB::table('subordinates as s')

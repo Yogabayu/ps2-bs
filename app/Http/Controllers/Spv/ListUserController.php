@@ -66,6 +66,7 @@ class ListUserController extends Controller
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
                 ->where('u.isActive','=',1)
                 ->where('u.position_id','!=',1)
+                ->where('u.position_id','!=',2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
             $offices = Office::all();

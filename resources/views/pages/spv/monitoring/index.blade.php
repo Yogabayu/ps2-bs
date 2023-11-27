@@ -35,7 +35,7 @@
                                                 <th>
                                                     Total Activitas <a href="#" data-container="body"
                                                         data-toggle="popover" data-placement="top"
-                                                        data-content="Total input data yang dilakukan hari ini">
+                                                        data-content="Total aktivitas yang dilakukan hari ini">
                                                         <i class="fas fa-question"></i>
                                                     </a>
                                                 </th>

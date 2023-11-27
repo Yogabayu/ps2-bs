@@ -19,7 +19,7 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $now = Carbon::now();
@@ -29,6 +29,7 @@ class DashboardController extends Controller
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
                 ->where('u.isActive','=',1)
                 ->where('u.position_id','!=',1)
+                ->where('u.position_id','!=',2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
 
@@ -60,13 +61,30 @@ class DashboardController extends Controller
                 ->count();
 
             //untuk grafik1
-            $dataGrafikChart = DB::table('subordinates as s')
-                ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->join('datas as d', 'u.uuid', '=', 'd.user_uuid')
-                ->where('s.supervisor_id', Auth::user()->uuid)
-                ->select(DB::raw('DATE_FORMAT(d.date, "%Y-%m") as month'), DB::raw('COUNT(d.id) as total'))
-                ->groupBy('month')
-                ->get();
+            $filter = $request->filter;
+
+            if ($filter === 'week') {
+                $dataGrafikChart = DB::table('subordinates as s')
+                    ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                    ->join('datas as d', 'u.uuid', '=', 'd.user_uuid')
+                    ->where('s.supervisor_id', Auth::user()->uuid)
+                    ->select(
+                        DB::raw('DATE_FORMAT(d.date, "%x-%v") as unit'),
+                        DB::raw('COUNT(d.id) as total')
+                    )
+                    ->groupBy('unit')
+                    ->get();
+            } else {
+                    $dataGrafikChart = DB::table('subordinates as s')
+                    ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                    ->join('datas as d', 'u.uuid', '=', 'd.user_uuid')
+                    ->where('s.supervisor_id', Auth::user()->uuid)
+                    ->select(DB::raw('DATE_FORMAT(d.date, "%Y-%m") as unit'), DB::raw('COUNT(d.id) as total'))
+                    ->groupBy('unit')
+                    ->get();
+            }
+
+            // $filter2 = $request->filter2;
 
             $dataGrafikChartPie = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
@@ -75,9 +93,19 @@ class DashboardController extends Controller
                 ->select(
                     DB::raw("SUM(CASE WHEN d.result = 1 THEN 1 ELSE 0 END) as ontime"),
                     DB::raw("SUM(CASE WHEN d.result = 0 THEN 1 ELSE 0 END) as outtime")
-                )
-                ->get();
-            // dd($dataGrafikChart);
+                );
+
+            if ($filter === 'week') {
+                $dataGrafikChartPie->whereBetween('d.created_at', [
+                    now()->startOfWeek(),
+                    now()->endOfWeek(),
+                ]);
+            } else {
+                $dataGrafikChartPie->whereMonth('d.created_at', now()->month);
+            }
+
+            $dataGrafikChartPie = $dataGrafikChartPie->get();
+
 
             return view("pages.spv.dashboard", compact(
                 'app',
@@ -87,7 +115,8 @@ class DashboardController extends Controller
                 "totalResult1",
                 "totalResult0",
                 "dataGrafikChart",
-                "dataGrafikChartPie"
+                "dataGrafikChartPie",
+                "filter",
             ));
         } catch (\Exception $e) {
             Alert::toast('Error : ' . $e->getMessage(), 'error');

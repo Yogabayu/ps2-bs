@@ -4,6 +4,6 @@
         <div class="bullet"></div> PT BPR Arthaya Indotama Pusaka
     </div>
     <div class="footer-right">
-        1.0.0
+        v{{ $app->version }}
     </div>
 </footer>

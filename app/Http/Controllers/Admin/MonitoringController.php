@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Datas;
 use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,9 +22,11 @@ class MonitoringController extends Controller
         try {
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)
-                    ->where('position_id', '!=', 1)
-                    ->where('position_id', '!=', 2)
-                    ->count();
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
+
+            $today = Carbon::today();
             $userActives = DB::table('users')
                 ->join('positions', 'users.position_id', '=', 'positions.id')
                 ->join('offices', 'users.office_id', '=', 'offices.id')
@@ -31,12 +34,10 @@ class MonitoringController extends Controller
                 ->where('users.isActive', '=', 1)
                 ->where('positions.id', '!=', 1)
                 ->where('positions.id', '!=', 2)
-                ->whereDate('user_activities.created_at', now())
-                ->select('users.uuid', 'users.name', 'users.photo', 'users.isProcessing', 'positions.name as position_name', 'offices.name as office_name', DB::raw('count(*) as
-            totalActivity'))
+                ->whereDate('user_activities.created_at', $today)
+                ->select('users.uuid', 'users.name', 'users.photo', 'users.isProcessing', 'positions.name as position_name', 'offices.name as office_name', DB::raw('count(user_activities.id) as totalActivity'))
                 ->groupBy('users.uuid', 'users.name', 'users.photo', 'users.isProcessing', 'positions.name', 'office_name')
                 ->get();
-            // dd($totalActiveTrans);
             return view('pages.admin.monitoring.index', compact('app', 'totalActiveTrans', 'userActives'));
         } catch (\Exception $e) {
             Alert::toast($e->getMessage(), 'error');
@@ -49,20 +50,20 @@ class MonitoringController extends Controller
         try {
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)
-                    ->where('position_id', '!=', 1)
-                    ->where('position_id', '!=', 2)
-                    ->count();
+                ->where('position_id', '!=', 1)
+                ->where('position_id', '!=', 2)
+                ->count();
             $data = DB::table('datas')
-                ->join('users', 'users.uuid','=', 'datas.user_uuid')
-                ->join('transactions', 'transactions.id','=', 'datas.transc_id')
-                ->join('place_transcs', 'place_transcs.id','=', 'datas.place_transc_id')
+                ->join('users', 'users.uuid', '=', 'datas.user_uuid')
+                ->join('transactions', 'transactions.id', '=', 'datas.transc_id')
+                ->join('place_transcs', 'place_transcs.id', '=', 'datas.place_transc_id')
                 ->where('datas.user_uuid', $request->last_uuid)
-                ->select('datas.*','users.name as username','transactions.name as transname','transactions.code as transcode','place_transcs.name as placename','place_transcs.code as placecode')
+                ->select('datas.*', 'users.name as username', 'transactions.name as transname', 'transactions.code as transcode', 'place_transcs.name as placename', 'place_transcs.code as placecode')
                 ->orderBy('created_at', 'desc')
                 ->first();
 
             if ($data) {
-                return view('pages.admin.monitoring.detail',compact('data','app','totalActiveTrans'));
+                return view('pages.admin.monitoring.detail', compact('data', 'app', 'totalActiveTrans'));
             } else {
                 Alert::toast('Data tidak ditemukan', 'error');
                 return redirect()->back();

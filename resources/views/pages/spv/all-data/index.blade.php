@@ -19,11 +19,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <a href="#">
+                                    {{-- <a href="#">
                                         <button class="btn btn-primary my-3">
                                             <i class="fas fa-add"></i> Add Data
                                         </button>
-                                    </a>
+                                    </a> --}}
                                     <a class="ml-2" data-toggle="modal" data-target="#exportModal" data-backdrop="true"
                                         data-keyboard="false">
                                         <button class="btn btn-primary my-3">

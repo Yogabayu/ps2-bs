@@ -19,7 +19,6 @@ use App\Http\Controllers\Spv\DashboardController as SpvDashboardController;
 use App\Http\Controllers\Spv\ListUserController;
 use App\Http\Controllers\Spv\MonitoringController as SpvMonitoringController;
 use App\Http\Controllers\Spv\ProfileController as SpvProfileController;
-use App\Http\Controllers\Sso\DatasController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\DataController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
@@ -48,6 +47,7 @@ Route::get('forgot-email/{token}', [AuthController::class, 'verifyForgot'])->nam
 Route::middleware('auth', 'role:1')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('indexAdmin');
+    Route::get('logoutOnTabClose',[AuthController::class,'logoutOnTabClose']);
 
     Route::resource('user', UserController::class);
     Route::post('a-rst', [UserController::class, 'rstpwd'])->name('a-rst');
@@ -79,6 +79,7 @@ Route::middleware('auth', 'role:1')->group(function () {
 //spv
 Route::middleware('auth', 'role:2')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('logoutOnTabClose',[AuthController::class,'logoutOnTabClose']);
     Route::get('s-dashboard', [SpvDashboardController::class, 'index'])->name('s-dashboard');
     Route::resource('s-profile', SpvProfileController::class);
 
@@ -95,6 +96,7 @@ Route::middleware('auth', 'role:2')->group(function () {
 //user
 Route::middleware('auth')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('logoutOnTabClose',[AuthController::class,'logoutOnTabClose'])->name('logoutOnTabClose');
     Route::resource('u-dashboard', UserDashboardController::class);
     Route::resource('u-data', DataController::class);
     Route::resource('u-profile', UserProfileController::class);

@@ -92,6 +92,18 @@
                     <div class="card">
                         <div class="card-header">
                             <h4>Grafik Input Data Perbulan</h4>
+                            <div class="card-header-action">
+                                <div class="btn-group">
+                                    <form method="GET" action="{{ route('s-dashboard') }}">
+                                        @csrf
+                                        <button type="submit" name="filter" value="month"
+                                            class="{{ $filter === 'month' || $filter === null ? 'btn btn-primary' : 'btn' }}">Month</button>
+                                        <button type="submit" name="filter" value="week"
+                                            class="{{ $filter === 'week' ? 'btn btn-primary' : 'btn' }}">Week</button>
+                                    </form>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="card-body">
                             <canvas id="grafik1"></canvas>
@@ -154,13 +166,14 @@
     <script>
         "use strict";
 
-        var ctx = document.getElementById("grafik1").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
+        var statistics_chart = document.getElementById("grafik1").getContext("2d");
+
+        var myChart = new Chart(statistics_chart, {
+            type: "line",
             data: {
-                labels: {!! json_encode($dataGrafikChart->pluck('month')->toArray()) !!},
+                labels: {!! json_encode($dataGrafikChart->pluck('unit')->toArray()) !!},
                 datasets: [{
-                    label: 'input perbulan: ',
+                    label: 'input per' + '{!! $filter === 'week' ? 'minggu' : 'bulan' !!}: ',
                     data: {!! json_encode($dataGrafikChart->pluck('total')->toArray()) !!},
                     borderWidth: 2,
                     backgroundColor: '#6777ef',
@@ -172,29 +185,26 @@
             },
             options: {
                 legend: {
-                    display: false
+                    display: false,
                 },
                 scales: {
                     yAxes: [{
                         gridLines: {
+                            display: false,
                             drawBorder: false,
-                            color: '#f2f2f2',
                         },
                         ticks: {
-                            beginAtZero: true,
-                            stepSize: 150
-                        }
-                    }],
+                            stepSize: 150,
+                        },
+                    }, ],
                     xAxes: [{
-                        ticks: {
-                            display: false
-                        },
                         gridLines: {
-                            display: false
-                        }
-                    }]
+                            color: "#fbfbfb",
+                            lineWidth: 2,
+                        },
+                    }, ],
                 },
-            }
+            },
         });
 
         var ctx = document.getElementById("pieChart").getContext('2d');
@@ -210,7 +220,7 @@
                         '#63ed7a',
                         '#fc544b',
                     ],
-                    label: 'Dataset 1'
+                    label: {!! json_encode($dataGrafikChartPie->pluck('unit')->toArray()) !!},
                 }],
                 labels: [
                     'onTime',
