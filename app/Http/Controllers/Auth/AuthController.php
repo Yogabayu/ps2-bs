@@ -19,7 +19,6 @@ class AuthController extends Controller
     public function forgotaction(Request $request)
     {
         try {
-            // dd($request->all());
             $request->validate([
                 'email' => 'required|email',
             ]);

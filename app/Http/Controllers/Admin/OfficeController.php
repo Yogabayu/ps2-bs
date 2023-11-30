@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\OfficeRequest;
 use App\Models\Office;
 use App\Models\Setting;
 use App\Models\User;
@@ -54,15 +55,9 @@ class OfficeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(OfficeRequest $request)
     {
         try {
-            $request->validate([
-                'code' => "required",
-                'name' => "required",
-                'supervisor_uuid' => 'required'
-            ]);
-
             $office = new Office();
             $office->code = $request->code;
             $office->name = $request->name;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\DatasExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\DataRequest;
 use App\Models\Datas;
 use App\Models\Place_transcs;
 use App\Models\Setting;
@@ -140,22 +141,9 @@ class DataController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DataRequest $request)
     {
         try {
-            $request->validate([
-                "user_uuid" => "required",
-                "transc_id" => "required",
-                "place_transc_id" => "required",
-                "date" => "required",
-                "start" => "required",
-                "end" => "required",
-                "nominal" => "required",
-                "customer_name" => "required",
-                "evidence_file" => "required",
-            ]);
-
-            //calculate result
             $startDateTime = Carbon::parse($request->date . ' ' . $request->start);
             $endDateTime = Carbon::parse($request->date . ' ' . $request->end);
 

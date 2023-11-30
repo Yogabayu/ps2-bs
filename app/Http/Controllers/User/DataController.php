@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UserRequest;
 use App\Models\Datas;
 use App\Models\Setting;
 use App\Models\Transaction;
@@ -63,21 +64,9 @@ class DataController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        try {
-            $request->validate([
-                "user_uuid" => "required",
-                "transc_id" => "required",
-                "place_transc_id" => "required",
-                "date" => "required",
-                "start" => "required",
-                "end" => "required",
-                "nominal" => "required",
-                "customer_name" => "required",
-                "evidence_file" => "required",
-            ]);
-
+        try {          
             //calculate result
             $startDateTime = Carbon::parse($request->date . ' ' . $request->start);
             $endDateTime = Carbon::parse($request->date . ' ' . $request->end);
@@ -129,30 +118,6 @@ class DataController extends Controller
                 'success' => false,
             ]);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
