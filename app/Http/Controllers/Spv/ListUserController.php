@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Office;
 use App\Models\Position;
 use App\Models\Setting;
+use App\Models\Subordinate;
 use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Database\QueryException;
@@ -18,6 +19,41 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ListUserController extends Controller
 {
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'subordinate_uuid' => 'required',
+            ]);
+
+            $cekUser = Subordinate::where('subordinate_uuid', $request->subordinate_uuid)->count();
+            $cekUserSPv = Subordinate::where('supervisor_id', $request->subordinate_uuid)->count();
+
+            if ($cekUser > 0) {
+                Alert::toast('Gagal User sudah terdaftar berada dibawah spv lain', 'error');
+                return redirect()->back();
+            } elseif ($cekUserSPv > 0) {
+                Alert::toast('Gagal, User terdaftar sebagai spv', 'error');
+                return redirect()->back();
+            } else {
+                $sub = new Subordinate();
+                $sub->supervisor_id = auth()->user()->uuid;
+                $sub->subordinate_uuid = $request->subordinate_uuid;
+                $sub->save();
+
+                UserActivity::create([
+                    'user_uuid' => Auth::user()->uuid,
+                    'activity' => 'Melakukan penambahan subordinate user : ' . $request->subordinate_uuid,
+                ]);
+                Alert::toast('Berhasil Menambah data', 'success');
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            Alert::toast($e->getMessage(), 'error');
+            return redirect()->back();
+        }
+    }
+
     public function rstpwd(Request $request)
     {
         try {
@@ -64,13 +100,20 @@ class ListUserController extends Controller
             $app = Setting::first();
             $totalActiveTrans = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->where('u.isActive','=',1)
-                ->where('u.position_id','!=',1)
-                ->where('u.position_id','!=',2)
+                ->where('u.isActive', '=', 1)
+                ->where('u.position_id', '!=', 1)
+                ->where('u.position_id', '!=', 2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
             $offices = Office::all();
             $positions = Position::all();
+            $users = DB::table('users')
+                ->leftJoin('subordinates', 'users.uuid', '=', 'subordinates.subordinate_uuid')
+                ->whereNull('subordinates.subordinate_uuid')
+                ->whereNotIn('users.position_id', [1, 2])
+                ->select('users.uuid', 'users.name')
+                ->get();
+
 
             return view("pages.spv.listuser.index", [
                 'type_menu' => 'user',
@@ -78,6 +121,7 @@ class ListUserController extends Controller
                 'app' => $app,
                 'offices' => $offices,
                 'positions' => $positions,
+                'users' => $users,
                 'totalActiveTrans' => $totalActiveTrans,
             ]);
         } catch (\Exception $e) {
@@ -139,20 +183,21 @@ class ListUserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
+            $sub = Subordinate::where('subordinate_uuid', $user->uuid)
+                ->where('supervisor_id', auth()->user()->uuid)
+                ->first();
 
-            UserActivity::create([
-                'user_uuid' => Auth::user()->uuid,
-                'activity' => 'Melakukan hapus user : ' . $user->name,
-            ]);
-
-            if (!empty($user->photo)) {
-                if ($user->photo && File::exists(public_path('file/profile/' . $user->photo))) {
-                    File::delete(public_path('file/profile/' . $user->photo));
-                }
+            if ($sub) {
+                $sub->delete();
+                UserActivity::create([
+                    'user_uuid' => Auth::user()->uuid,
+                    'activity' => 'Melakukan hapus hubungan bawahan user : ' . $user->name,
+                ]);
+                Alert::toast('Berhasil Menghapus Hubungan Bawahan', 'success');
+            } else {
+                Alert::toast('Gagal Menghapus Hubungan Bawahan', 'error');
             }
-            $user->delete();
 
-            Alert::toast('User berhasil di hapus', 'success');
             return redirect()->back();
         } catch (QueryException $e) {
             Alert::error('Gagal Menghapus data, karena user memiliki data yang masih tertaut di aplikasi ', 'error');

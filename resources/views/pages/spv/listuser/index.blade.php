@@ -18,9 +18,10 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <a href="#">
+                                <a class="ml-2" data-toggle="modal" data-target="#insertModal" data-backdrop="true"
+                                    data-keyboard="false">
                                     <button class="btn btn-primary my-3">
-                                        <i class="fas fa-add"></i> Add user
+                                        <i class="fas fa-file-export"></i> Add Data
                                     </button>
                                 </a>
                                 <div class="table-responsive">
@@ -101,6 +102,41 @@
                 </div>
             </div>
         </section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" style="z-index: 9999">
+            <div class="modal-dialog " role="document">
+                <form action="{{ route('s-listuser.store') }}" method="post">
+                    @csrf
+                    @method('post')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Insert Data</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{-- //URUNG = controller blm dibuat --}}
+
+                            <div class="form-group">
+                                <label for="exportType">Select User:</label>
+                                <select class="form-control" name="subordinate_uuid" id="subordinate_uuid">
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->uuid }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 @endsection
@@ -129,7 +165,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, lanjutkan !'
+                confirmButtonText: 'Ya, lanjutkan !',
+                cancelButtonText: 'Tutup'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // If the user clicks "Yes," submit the form
