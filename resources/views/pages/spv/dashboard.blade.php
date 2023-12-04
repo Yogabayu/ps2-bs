@@ -91,7 +91,7 @@
                 <div class="col-12 col-md-6 col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Grafik Input Data Perbulan</h4>
+                            <h4>Grafik Input Data</h4>
                             <div class="card-header-action">
                                 <div class="btn-group">
                                     <form method="GET" action="{{ route('s-dashboard') }}">
