@@ -101,5 +101,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('u-data', DataController::class);
     Route::resource('u-profile', UserProfileController::class);
     Route::post('u-isprocessing', [DataController::class, 'process'])->name("u-isprocessing");
+    Route::post('u-export', [DataController::class, 'export'])->name("u-export");
 });
 

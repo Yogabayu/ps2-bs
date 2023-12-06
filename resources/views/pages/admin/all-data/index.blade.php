@@ -19,11 +19,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    {{-- <a href="{{ route('datas.create') }}">
+                                    <a href="{{ route('datas.create') }}">
                                         <button class="btn btn-primary my-3">
                                             <i class="fas fa-add"></i> Add Data
                                         </button>
-                                    </a> --}}
+                                    </a>
                                     <a class="ml-2" data-toggle="modal" data-target="#exportModal" data-backdrop="true"
                                         data-keyboard="false">
                                         <button class="btn btn-primary my-3">
@@ -40,10 +40,10 @@
                                                 </th>
                                                 <th>Nama</th>
                                                 <th>Transaksi</th>
-                                                <th>Tanggal</th>
-                                                <th>Nominal</th>
-                                                <th>Nama Nasabah</th>
                                                 <th>Tempat Transaksi</th>
+                                                <th>Tanggal</th>
+                                                <th>Mulai</th>
+                                                <th>Selesai</th>
                                                 <th>Hasil</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -59,25 +59,23 @@
                                                         {{ $no++ }}
                                                     </td>
                                                     <td>
-                                                        {{ Str::limit($data->user->name, 10) }}
+                                                        {{ $data->user->name }}
                                                     </td>
                                                     <td>
                                                         {{ $data->transaction->code }} -
-                                                        {{ Str::limit($data->transaction->name, 5) }}
+                                                        {{ $data->transaction->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $data->placeTransc->name }}
                                                     </td>
                                                     <td>
                                                         {{ \Carbon\Carbon::parse($data->date)->format('d-m-Y') }}
                                                     </td>
-
                                                     <td>
-                                                        Rp {{ number_format($data->nominal, 0, ',', '.') }}
+                                                        {{ $data->start }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->customer_name }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $data->placeTransc->code }} &mdash;
-                                                        {{ $data->placeTransc->name }}
+                                                        {{ $data->end }}
                                                     </td>
                                                     <td>
                                                         @if ($data->result == 1)

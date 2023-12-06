@@ -19,9 +19,8 @@ return new class extends Migration
             $table->date('date');
             $table->time('start');
             $table->time('end');
+            $table->string('no_rek');
             $table->string('evidence_file');
-            $table->integer('nominal');
-            $table->string('customer_name');
             $table->integer('result')->comment("1=sesuai,2=tdk sesuai");
             $table->boolean("isActive")->comment("untuk patokan transaksi aktif atau tidak");
             $table->timestamps();

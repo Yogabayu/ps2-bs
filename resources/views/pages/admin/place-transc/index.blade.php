@@ -38,7 +38,6 @@
                                                 <th class="text-center">
                                                     No
                                                 </th>
-                                                <th>Code</th>
                                                 <th>Nama</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -51,9 +50,6 @@
                                                 <tr>
                                                     <td>
                                                         {{ $no++ }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $data->code }}
                                                     </td>
                                                     <td>
                                                         {{ $data->name }}

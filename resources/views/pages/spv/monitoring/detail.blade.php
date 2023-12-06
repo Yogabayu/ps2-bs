@@ -55,8 +55,8 @@
                                                     <i class="fas fa-person"></i>
                                                 </div>
                                             </div>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->placecode }} - {{ $data->placename }}" required readonly>
+                                            <input type="text" class="form-control" value="{{ $data->placename }}"
+                                                required readonly>
                                         </div>
                                     </div>
 
@@ -98,31 +98,31 @@
                                                 readonly>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Target Time</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-square-poll-vertical"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" readonly
+                                                value="{{ $data->transMaxTime }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Lama Transaksi</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-square-poll-vertical"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" readonly
+                                                value="{{ $data->lamaTransaksi }}">
+                                        </div>
+                                    </div>
 
-                                    <div class="form-group">
-                                        <label>Nominal Transaksi</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                    <i class="fas fa-person"></i>
-                                                </div>
-                                            </div>
-                                            <input type="text" class="form-control"
-                                                value="Rp {{ number_format($data->nominal, 0, ',', '.') }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Nama Nasabah</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                    <i class="fas fa-person"></i>
-                                                </div>
-                                            </div>
-                                            <input type="text" class="form-control" value="{{ $data->customer_name }}"
-                                                readonly>
-                                        </div>
-                                    </div>
                                     <div class="form-group">
                                         <label>Hasil</label>
                                         <div class="input-group">
@@ -133,6 +133,18 @@
                                             </div>
                                             <input type="text" class="form-control" readonly
                                                 value="{{ $data->result == 1 ? 'onTime' : 'outTime' }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nomor Rekening</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-person"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{ $data->no_rek }}"
+                                                readonly>
                                         </div>
                                     </div>
                                 </div>

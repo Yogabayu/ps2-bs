@@ -37,12 +37,19 @@ class DatabaseSeeder extends Seeder
 
         DB::table('place_transcs')->insert([
             [
-                'code' => 'W',
-                'name' => 'WALK IN'
+                'name' => 'Kantor Pusat Caruban'
             ],
             [
-                'code' => 'AO',
-                'name' => 'SETORAN AO'
+                'name' => 'Kantor Cabang Ponorogo'
+            ],
+            [
+                'name' => 'Kantor Cabang Magetan'
+            ],
+            [
+                'name' => 'Kantor Cabang Madiun'
+            ],
+            [
+                'name' => 'Kantor Kas Balong'
             ],
         ]);
 
@@ -109,6 +116,7 @@ class DatabaseSeeder extends Seeder
             [
                 'logo' => 'logos.png',
                 'name_app' => 'CepatCatat',
+                'version' => '2-beta',
             ],
         ]);
     }

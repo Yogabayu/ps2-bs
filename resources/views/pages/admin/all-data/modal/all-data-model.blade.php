@@ -54,19 +54,6 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Batas Waktu</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-clock"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control"
-                                            value="{{ $data->transaction->max_time }}" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
                                     <label>Waktu Mulai</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -91,44 +78,18 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Nominal</label>
+                                    <label>Batas Waktu</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-money-bill"></i>
+                                                <i class="fas fa-clock"></i>
                                             </div>
                                         </div>
                                         <input type="text" class="form-control"
-                                            value="Rp {{ number_format($data->nominal, 0, ',', '.') }}" readonly>
+                                            value="{{ $data->transaction->max_time }}" readonly>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Nama Nasabah</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-person"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control" value="{{ $data->customer_name }}"
-                                            readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Tempat Transaksi</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-location-dot"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control"
-                                            value="{{ $data->placeTransc->code }} - {{ $data->placeTransc->name }}"
-                                            readonly>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <label>Hasil</label>
                                     <div class="input-group">
@@ -142,6 +103,31 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label>Nomor Rekening</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-money-bill"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ $data->no_rek }}"
+                                            readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Tempat Transaksi</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-location-dot"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control"
+                                            value="{{ $data->placeTransc->name }}" readonly>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

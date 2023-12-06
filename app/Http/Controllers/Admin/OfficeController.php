@@ -44,7 +44,7 @@ class OfficeController extends Controller
     public function create()
     {
         $app = Setting::first();
-        $users = DB::table('users')->select('uuid', 'name')->get();
+        $users = DB::table('users')->select('uuid', 'name')->where('position_id',2)->get();
         $totalActiveTrans = User::where('isActive', 1)
             ->where('position_id', '!=', 1)
             ->where('position_id', '!=', 2)
@@ -96,7 +96,7 @@ class OfficeController extends Controller
                     ->where('position_id', '!=', 1)
                     ->where('position_id', '!=', 2)
                     ->count();
-            $users = DB::table('users')->select('uuid', 'name')->get();
+            $users = DB::table('users')->select('uuid', 'name')->where('position_id',2)->get();
 
             return view('pages.admin.office.action.update', compact('app', 'data', 'totalActiveTrans', 'users'));
         } catch (\Exception $e) {

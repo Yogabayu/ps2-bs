@@ -10,7 +10,7 @@ class Datas extends Model
     use HasFactory;
     protected $table = "datas";
     protected $fillable = [
-        'user_uuid', 'transc_id', 'place_transc_id', 'date', 'start', 'end', 'evidence_file', 'nominal', 'customer_name', 'result', 'isActive'
+        'user_uuid', 'transc_id', 'place_transc_id', 'date', 'start', 'end', 'evidence_file', 'no_rek', 'result', 'isActive'
     ];
 
     public function user()

@@ -1,7 +1,7 @@
         <!-- Modal -->
         <div class="modal fade" id="detailModal{{ $dataId }}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 9999">
-            <div class="modal-dialog " role="document">
+            <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Detail Data</h5>
@@ -89,45 +89,6 @@
                                         <input type="text" class="form-control" value="{{ $data->end }}" readonly>
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label>Nominal</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-money-bill"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control"
-                                            value="Rp {{ number_format($data->nominal, 0, ',', '.') }}" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Nama Nasabah</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-person"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control" value="{{ $data->customer_name }}"
-                                            readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Tempat Transaksi</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-location-dot"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control"
-                                            value="{{ $data->ptcode }} - {{ $data->ptname }}" readonly>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <label>Hasil</label>
                                     <div class="input-group">
@@ -138,6 +99,31 @@
                                         </div>
                                         <input type="text" class="form-control" readonly
                                             value="{{ $data->result == 1 ? 'onTime' : 'outTime' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tempat Transaksi</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-location-dot"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ $data->ptname }}"
+                                            readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nomor Rekening</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-person"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ $data->no_rek }}"
+                                            readonly>
                                     </div>
                                 </div>
 

@@ -47,6 +47,8 @@ class AllDataController extends Controller
                 ->orderBy('d.id', 'desc');
 
             $data = $query->get();
+
+            // dd($data);
             $filename = 'semua data ' . Carbon::now()->format('Y-m-d');
 
             UserActivity::create([

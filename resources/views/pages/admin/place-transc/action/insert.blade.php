@@ -27,7 +27,7 @@
                             @method('post')
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label>Kode Tempat</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -38,7 +38,7 @@
                                             <input type="text" class="form-control" placeholder="code tempat"
                                                 name="code" required>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group">
                                         <label>Nama</label>
                                         <div class="input-group">

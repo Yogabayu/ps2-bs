@@ -42,7 +42,7 @@ class PlaceTransactionController extends Controller
             ->where('position_id', '!=', 1)
             ->where('position_id', '!=', 2)
             ->count();
-        return view('pages.admin.place-transc.action.insert', compact('app', 'totalActivetrans'));
+        return view('pages.admin.place-transc.action.insert', compact('app', 'totalActiveTrans'));
     }
 
     /**
@@ -52,7 +52,6 @@ class PlaceTransactionController extends Controller
     {
         try {
             $request->validate([
-                'code' => "required",
                 'name' => "required"
             ]);
 

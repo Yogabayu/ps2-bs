@@ -40,10 +40,11 @@
                                                 </th>
                                                 <th>Nama</th>
                                                 <th>Transaksi</th>
-                                                <th>Tanggal</th>
-                                                <th>Nominal</th>
-                                                <th>Nama Nasabah</th>
                                                 <th>Tempat Transaksi</th>
+                                                <th>Tanggal</th>
+                                                <th>Mulai</th>
+                                                <th>Selesai</th>
+                                                {{-- <th>No Rek</th> --}}
                                                 <th>Hasil</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -59,26 +60,27 @@
                                                         {{ $no++ }}
                                                     </td>
                                                     <td>
-                                                        {{ Str::limit($data->username, 10) }}
+                                                        {{ $data->username }}
                                                     </td>
                                                     <td>
                                                         {{ $data->codeTransaction }} -
-                                                        {{ Str::limit($data->nameTransaction, 5) }}
+                                                        {{ $data->nameTransaction }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $data->ptname }}
                                                     </td>
                                                     <td>
                                                         {{ \Carbon\Carbon::parse($data->date)->format('d-m-Y') }}
                                                     </td>
-
                                                     <td>
-                                                        Rp {{ number_format($data->nominal, 0, ',', '.') }}
+                                                        {{ $data->start }}
                                                     </td>
                                                     <td>
-                                                        {{ $data->customer_name }}
+                                                        {{ $data->end }}
                                                     </td>
-                                                    <td>
-                                                        {{ $data->ptcode }} &mdash;
-                                                        {{ $data->ptname }}
-                                                    </td>
+                                                    {{-- <td>
+                                                        {{ $data->no_rek }}
+                                                    </td> --}}
                                                     <td>
                                                         @if ($data->result == 1)
                                                             <span style="color: green;">onTime</span>
@@ -127,7 +129,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            {{-- //URUNG = controller blm dibuat --}}
                             <div class="form-group">
                                 <label for="exportType">Select Export Type:</label>
                                 <select class="form-control" name="type" id="type">

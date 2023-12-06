@@ -91,28 +91,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Nominal</label>
+                                    <label>No Rekening</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-money-bill"></i>
+                                                <i class="fas fa-wallet"></i>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control"
-                                            value="Rp {{ number_format($data->nominal, 0, ',', '.') }}" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Nama Nasabah</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-person"></i>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control" value="{{ $data->customer_name }}"
-                                            readonly>
+                                        <input type="text" class="form-control" value="{{ $data->no_rek }}" readonly>
                                     </div>
                                 </div>
 
@@ -125,8 +111,7 @@
                                             </div>
                                         </div>
                                         <input type="text" class="form-control"
-                                            value="{{ $data->placeTransc->code }} - {{ $data->placeTransc->name }}"
-                                            readonly>
+                                            value="{{ $data->placeTransc->name }}" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">

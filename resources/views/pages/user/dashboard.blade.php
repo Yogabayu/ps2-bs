@@ -48,9 +48,7 @@
                                                 placeholder="Waktu Selesai" readonly />
                                         </div>
                                     </div>
-
                                 </div>
-
                                 <div class="row">
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
@@ -104,7 +102,7 @@
                                                     <option selected>-</option>
                                                     @foreach ($places as $place)
                                                         <option value="{{ $place->id }}">
-                                                            {{ $place->code }} &mdash; {{ $place->name }}
+                                                            {{ $place->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -113,39 +111,24 @@
                                     </div>
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
-                                            <label>Nominal</label>
+                                            <label>No Rekening</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
-                                                        <i class="fas fa-rupiah-sign"></i>
+                                                        <i class="fas fa-wallet"></i>
                                                     </div>
                                                 </div>
-                                                <input type="text" name="nominal" id="nominal" class="form-control"
+                                                <input type="text" name="no_rek" id="no_rek" class="form-control"
                                                     placeholder="0" pattern="[0-9]*">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label>Nama Customer</label>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-building"></i>
-                                                    </div>
-                                                </div>
-                                                <input type="text" name="customer_name" id="customer_name"
-                                                    class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer text-right">
-                                <button type="button" class="btn btn-primary" onclick="hitungDurasi()">Simpan</button>
+                                <button type="button" class="btn btn-primary" onclick="hitungDurasi()">
+                                    Simpan
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -268,7 +251,7 @@
     <script src="{{ asset('stisla/library/chart.js/dist/Chart.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
-    <script>
+    {{-- <script>
         /* Dengan Rupiah */
         var dengan_rupiah = document.getElementById('nominal');
         dengan_rupiah.addEventListener('keyup', function(e) {
@@ -291,7 +274,7 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
-    </script>
+    </script> --}}
 
     {{-- main script  --}}
     <script>
@@ -364,10 +347,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data.message);
-
                     if (data.success) {
-                        console.log('success');
                         return;
                     } else {
                         console.log(data.message);
@@ -399,10 +379,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data.message);
-
                     if (data.success) {
-                        console.log('success');
                         return;
                     } else {
                         console.log(data.message);
@@ -438,8 +415,7 @@
             var date = document.getElementById("date").value;
             var start = waktuMulai;
             var end = waktuSelesai;
-            var nominal = document.getElementById("nominal").value;
-            var customer_name = document.getElementById("customer_name").value;
+            var no_rek = document.getElementById("no_rek").value;
             var isActive = 0;
             // Mendapatkan hasil rekaman video sebagai Blob
             if (mediaRecorder && mediaRecorder.state === "recording") {
@@ -458,8 +434,7 @@
             formData.append("date", date);
             formData.append("start", start);
             formData.append("end", end);
-            formData.append("nominal", nominal);
-            formData.append("customer_name", customer_name);
+            formData.append("no_rek", no_rek);
             formData.append("isActive", isActive);
             formData.append("_token", "{{ csrf_token() }}");
             formData.append("evidence_file", blob, "rekaman.webm");
@@ -496,13 +471,13 @@
                     }
                 })
                 .catch(error => {
-                    if (data.success == false) {
-                        Swal.fire({
-                            title: "Error!",
-                            text: error.message,
-                            icon: "error"
-                        });
-                    }
+                    // if (data.success == false) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: error.message,
+                        icon: "error"
+                    });
+                    // }
                 });
         }
     </script>

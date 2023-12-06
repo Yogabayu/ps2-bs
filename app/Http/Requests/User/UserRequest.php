@@ -28,8 +28,7 @@ class UserRequest extends FormRequest
             "date"              => "required",
             "start"             => "required",
             "end"               => "required",
-            "nominal"           => "required",
-            "customer_name"     => "required",
+            "no_rek"           => "required",
             "evidence_file"     => "required",
         ];
     }

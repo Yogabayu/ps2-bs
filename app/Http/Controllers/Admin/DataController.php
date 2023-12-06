@@ -109,7 +109,7 @@ class DataController extends Controller
                 ->count();
             $datas =
                 Datas::with('user', 'transaction', 'placeTransc')->orderBy('created_at', 'desc')->get();
-
+            // dd($datas);
             return view("pages.admin.all-data.index", compact("app", "datas", "totalActiveTrans"));
         } catch (\Exception $e) {
             Alert::toast($e->getMessage(), 'error');

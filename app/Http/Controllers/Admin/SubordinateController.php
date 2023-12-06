@@ -60,7 +60,7 @@ class SubordinateController extends Controller
             $users = DB::table('users')
                 ->join('positions', 'users.position_id', '=', 'positions.id')
                 ->select('users.id', 'users.uuid', 'users.name')
-                ->where('users.position_id', '!=', 1)
+                ->whereNotIn('users.position_id', [1,2])
                 ->get();
 
             return view('pages.admin.subordinate.detail', compact('app', 'totalActiveTrans', 'subordinates', 'spv_data', 'office', 'users'));

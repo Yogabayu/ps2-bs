@@ -58,10 +58,18 @@ class MonitoringController extends Controller
                 ->join('transactions', 'transactions.id', '=', 'datas.transc_id')
                 ->join('place_transcs', 'place_transcs.id', '=', 'datas.place_transc_id')
                 ->where('datas.user_uuid', $request->last_uuid)
-                ->select('datas.*', 'users.name as username', 'transactions.name as transname', 'transactions.code as transcode', 'place_transcs.name as placename', 'place_transcs.code as placecode')
+                ->select(
+                    'datas.*', 
+                    'users.name as username', 
+                    'transactions.name as transname', 
+                    'transactions.code as transcode', 
+                    'transactions.max_time as transMaxTime', 
+                    'place_transcs.name as placename', 
+                    'place_transcs.code as placecode',
+                    DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, datas.start, datas.end)) as lamaTransaksi'),
+                )
                 ->orderBy('created_at', 'desc')
                 ->first();
-
             if ($data) {
                 return view('pages.admin.monitoring.detail', compact('data', 'app', 'totalActiveTrans'));
             } else {

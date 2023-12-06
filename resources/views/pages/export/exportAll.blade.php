@@ -39,14 +39,13 @@
                 <th>Tanggal Transaksi</th>
                 <th>Kode Transaksi</th>
                 <th>Keterangan Transaksi</th>
-                <th>Target Timerline</th>
+                <th>Tempat Transaksi</th>
+                <th>No Rekening</th>
                 <th>Mulai</th>
                 <th>Selesai</th>
                 <th>Lama</th>
-                <th>Nominal</th>
-                <th>Nama Nasabah</th>
-                <th>Tempat Transaksi</th>
-                <th>Timeline</th>
+                <th>Target Timerline</th>
+                <th>Hasil</th>
                 <th>File</th>
             </tr>
         </thead>
@@ -72,7 +71,7 @@
                         {{ $d->blnTransaksi }}
                     </td>
                     <td>
-                        {{ $d->date }}
+                        {{ \Carbon\Carbon::parse($d->date)->format('d-m-Y') }}
                     </td>
                     <td>
                         {{ $d->transactionCode }}
@@ -81,7 +80,10 @@
                         {{ $d->transactionName }}
                     </td>
                     <td>
-                        {{ $d->transactionMaxTime }}
+                        {{ $d->ptName }}
+                    </td>
+                    <td>
+                        {{ $d->no_rek }}
                     </td>
                     <td>
                         {{ $d->start }}
@@ -93,13 +95,7 @@
                         {{ $d->lamaTransaksi }}
                     </td>
                     <td>
-                        {{ $d->nominal }}
-                    </td>
-                    <td>
-                        {{ $d->customer_name }}
-                    </td>
-                    <td>
-                        {{ $d->ptName }}
+                        {{ $d->transactionMaxTime }}
                     </td>
                     <td>
                         {{ $d->timeline }}
