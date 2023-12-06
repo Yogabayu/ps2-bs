@@ -66,8 +66,8 @@
                                                     </td>
 
                                                     <td>
-                                                        {{ $data->transaction->code }} &mdash;
-                                                        {{ $data->transaction->name }}
+                                                        {{ $data->transaction->code }} -
+                                                        {{ Str::limit($data->transaction->name, 10) }}
                                                     </td>
                                                     <td>
                                                         {{ \Carbon\Carbon::parse($data->date)->format('d-m-Y') }}

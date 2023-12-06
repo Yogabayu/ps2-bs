@@ -63,7 +63,7 @@
                                                     </td>
                                                     <td>
                                                         {{ $data->transaction->code }} -
-                                                        {{ $data->transaction->name }}
+                                                        {{ Str::limit($data->transaction->name, 10) }}
                                                     </td>
                                                     <td>
                                                         {{ $data->placeTransc->name }}

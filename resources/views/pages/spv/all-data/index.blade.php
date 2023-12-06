@@ -64,7 +64,7 @@
                                                     </td>
                                                     <td>
                                                         {{ $data->codeTransaction }} -
-                                                        {{ $data->nameTransaction }}
+                                                        {{ Str::limit($data->nameTransaction, 10) }}
                                                     </td>
                                                     <td>
                                                         {{ $data->ptname }}
