@@ -102,7 +102,7 @@ class AuthController extends Controller
 
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                if ($user->position_id === 1) {
+                if ($user->position_id == 1) {
                     UserActivity::create([
                         'user_uuid' => Auth::user()->uuid,
                         'activity' => 'Login ke sistem',
@@ -160,7 +160,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User marked as inactive.',
-            'success'=>true
+            'success' => true
         ]);
     }
 }
