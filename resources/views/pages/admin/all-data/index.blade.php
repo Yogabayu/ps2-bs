@@ -4,6 +4,7 @@
 
 @push('style')
     <link rel="stylesheet" href="{{ asset('stisla/library/datatables/media/css/jquery.dataTables.min.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 @endpush
 
 @section('main')
@@ -124,15 +125,46 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            {{-- //URUNG = controller blm dibuat --}}
-
+                        <div class="modal-body" x-cloak x-data="{ isAll: true }">
+                            <div>
+                                <p>Pilih jenis export data:</p>
+                                <button @click="isAll = !isAll" class="btn btn-sm btn-primary my-3 justify-content-start" type="button"
+                                    x-bind:class="{ 'btn-success': isAll, 'btn-primary': !isAll }">Semua Data</button>
+                                <button @click="isAll = false" class="btn btn-sm btn-primary my-3 justify-content-start" type="button"
+                                    x-bind:class="{ 'btn-success': !isAll, 'btn-primary': isAll }">Partial Data</button>
+                            </div>
+                        
                             <div class="form-group">
                                 <label for="exportType">Select Export Type:</label>
                                 <select class="form-control" name="type" id="type">
                                     <option value="1">Excel</option>
                                     <option value="2">PDF</option>
                                 </select>
+                            </div>
+                        
+                            <div x-show="isAll===false">
+                                <div class="form-group">
+                                    <label for="typeTrans">Tipe Transaksi: </label>
+                                    <select class="form-control" name="typeTrans" id="typeTrans">
+                                        <option value="null"> - </option>
+                                        @foreach ($typeTrans as $tt)
+                                        <option value="{{ $tt->id }}">{{ $tt->code }}-{{ $tt->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="offices">Kantor</label>
+                                    <select class="form-control" name="offices" id="offices">
+                                        <option value="null"> - </option>
+                                        @foreach ($offices as $o)
+                                        <option value="{{ $o->id }}">{{ $o->code }}-{{ $o->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="date">Bulan</label>
+                                    <input type="month" name="date" id="date" class="form-control">
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">

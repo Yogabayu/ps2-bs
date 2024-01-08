@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\DatasExport;
+use App\Exports\PartialExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DataRequest;
 use App\Models\Datas;
@@ -25,72 +26,118 @@ class DataController extends Controller
     public function export(Request $request)
     {
         try {
-            if ($request->type == 1) {
+            // dd($request->all());
+            if ($request->typeTrans !== "null" && $request->offices !== "null") {
+                $date = $request->input('date');
+                $officeName = DB::table('offices')->select('name')->where('id', $request->offices)->first();
                 $data = DB::table('datas as d')
                     ->join('users as u', 'u.uuid', '=', 'd.user_uuid')
                     ->join('transactions as t', 't.id', '=', 'd.transc_id')
-                    ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
                     ->join('positions as p', 'p.id', '=', 'u.position_id')
                     ->join('offices as o', 'o.id', '=', 'u.office_id')
                     ->select(
-                        'd.*',
                         'u.name as username',
                         'p.name as positionName',
                         'o.name as officeName',
-                        't.code as transactionCode',
-                        't.name as transactionName',
-                        't.max_time as transactionMaxTime',
-                        'pt.code as ptCode',
-                        'pt.name as ptName',
-                        DB::raw('MONTH(d.date) as blnTransaksi'),
-                        DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, d.start, d.end)) as lamaTransaksi'),
-                        DB::raw('CASE WHEN d.result = 1 THEN "Sesuai" ELSE "Tidak Sesuai" END as timeline'),
+                        DB::raw('COUNT(*) as totalTransactions'),
+                        DB::raw('SUM(CASE WHEN d.result = 1 THEN 1 ELSE 0 END) as totalOnTime'),
+                        DB::raw('SUM(CASE WHEN d.result = 0 THEN 1 ELSE 0 END) as totalOutTime')
                     )
-                    ->orderBy('d.id', 'desc')
+                    ->where('t.id', $request->typeTrans)
+                    ->where('o.id', $request->offices)
+                    ->whereYear('d.created_at', '=', date('Y', strtotime($date)))
+                    ->whereMonth('d.created_at', '=', date('m', strtotime($date)))
+                    ->orderBy('username')
+                    ->groupBy('username', 'positionName', 'officeName')
                     ->get();
 
-                $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.xlsx';
+                if ($request->type == 1) {
+                    $filename = 'Data ' . $date . ' - ' . $officeName->name . '.xlsx';
+                    UserActivity::create([
+                        'user_uuid' => Auth::user()->uuid,
+                        'activity' => 'Melakukan export excel : ' . $filename,
+                    ]);
 
-                UserActivity::create([
-                    'user_uuid' => Auth::user()->uuid,
-                    'activity' => 'Melakukan export excel : ' . $filename,
-                ]);
+                    return Excel::download(new PartialExport($data), $filename);
+                } else {
+                    $filename = 'Data  ' . $date . ' - ' . $officeName->name . '.pdf';
+                    UserActivity::create([
+                        'user_uuid' => Auth::user()->uuid,
+                        'activity' => 'Melakukan export pdf : ' . $filename,
+                    ]);
 
-                return Excel::download(new DatasExport($data), $filename);
+                    $pdf = Pdf::loadView('pages.export.exportPartial', ['data' => $data])->setPaper('legal', 'landscape');
+                    return $pdf->download($filename);
+                }
             } else {
-                $data = DB::table('datas as d')
-                    ->join('users as u', 'u.uuid', '=', 'd.user_uuid')
-                    ->join('transactions as t', 't.id', '=', 'd.transc_id')
-                    ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
-                    ->join('positions as p', 'p.id', '=', 'u.position_id')
-                    ->join('offices as o', 'o.id', '=', 'u.office_id')
-                    ->select(
-                        'd.*',
-                        'u.name as username',
-                        'p.name as positionName',
-                        'o.name as officeName',
-                        't.code as transactionCode',
-                        't.name as transactionName',
-                        't.max_time as transactionMaxTime',
-                        'pt.code as ptCode',
-                        'pt.name as ptName',
-                        DB::raw('MONTH(d.date) as blnTransaksi'),
-                        DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, d.start, d.end)) as lamaTransaksi'),
-                        DB::raw('CASE WHEN d.result = 1 THEN "Sesuai" ELSE "Tidak Sesuai" END as timeline'),
-                    )
-                    ->orderBy('d.id', 'desc')
-                    ->get();
+                if ($request->type == 1) {
+                    $data = DB::table('datas as d')
+                        ->join('users as u', 'u.uuid', '=', 'd.user_uuid')
+                        ->join('transactions as t', 't.id', '=', 'd.transc_id')
+                        ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
+                        ->join('positions as p', 'p.id', '=', 'u.position_id')
+                        ->join('offices as o', 'o.id', '=', 'u.office_id')
+                        ->select(
+                            'd.*',
+                            'u.name as username',
+                            'p.name as positionName',
+                            'o.name as officeName',
+                            't.code as transactionCode',
+                            't.name as transactionName',
+                            't.max_time as transactionMaxTime',
+                            'pt.code as ptCode',
+                            'pt.name as ptName',
+                            DB::raw('MONTH(d.date) as blnTransaksi'),
+                            DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, d.start, d.end)) as lamaTransaksi'),
+                            DB::raw('CASE WHEN d.result = 1 THEN "Sesuai" ELSE "Tidak Sesuai" END as timeline'),
+                        )
+                        ->orderBy('d.id', 'desc')
+                        ->get();
 
-                $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.pdf';
-                $pdf = Pdf::loadView('pages.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
+                    $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.xlsx';
 
-                UserActivity::create([
-                    'user_uuid' => Auth::user()->uuid,
-                    'activity' => 'Melakukan export pdf : ' . $filename,
-                ]);
-                return $pdf->download($filename);
+                    UserActivity::create([
+                        'user_uuid' => Auth::user()->uuid,
+                        'activity' => 'Melakukan export excel : ' . $filename,
+                    ]);
+
+                    return Excel::download(new DatasExport($data), $filename);
+                } else {
+                    $data = DB::table('datas as d')
+                        ->join('users as u', 'u.uuid', '=', 'd.user_uuid')
+                        ->join('transactions as t', 't.id', '=', 'd.transc_id')
+                        ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
+                        ->join('positions as p', 'p.id', '=', 'u.position_id')
+                        ->join('offices as o', 'o.id', '=', 'u.office_id')
+                        ->select(
+                            'd.*',
+                            'u.name as username',
+                            'p.name as positionName',
+                            'o.name as officeName',
+                            't.code as transactionCode',
+                            't.name as transactionName',
+                            't.max_time as transactionMaxTime',
+                            'pt.code as ptCode',
+                            'pt.name as ptName',
+                            DB::raw('MONTH(d.date) as blnTransaksi'),
+                            DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, d.start, d.end)) as lamaTransaksi'),
+                            DB::raw('CASE WHEN d.result = 1 THEN "Sesuai" ELSE "Tidak Sesuai" END as timeline'),
+                        )
+                        ->orderBy('d.id', 'desc')
+                        ->get();
+
+                    $filename = 'semua data ' . Carbon::now()->format('Y-m-d') . '.pdf';
+                    $pdf = Pdf::loadView('pages.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
+
+                    UserActivity::create([
+                        'user_uuid' => Auth::user()->uuid,
+                        'activity' => 'Melakukan export pdf : ' . $filename,
+                    ]);
+                    return $pdf->download($filename);
+                }
             }
         } catch (\Exception $e) {
+            dd($e->getMessage());
             Alert::toast($e->getMessage(), 'error');
             return redirect()->back();
         }
@@ -109,7 +156,9 @@ class DataController extends Controller
                 ->count();
             $datas =
                 Datas::with('user:uuid,name', 'transaction:id,code,name,max_time', 'placeTransc')->orderBy('created_at', 'desc')->get();
-            return view("pages.admin.all-data.index", compact("app", "datas", "totalActiveTrans"));
+            $typeTrans = DB::table('transactions')->select('id', 'name', 'position_id', 'code')->get();
+            $offices = DB::table('offices')->select('id', 'code', 'name')->get();
+            return view("pages.admin.all-data.index", compact("app", "datas", "totalActiveTrans", "typeTrans", "offices"));
         } catch (\Exception $e) {
             Alert::toast($e->getMessage(), 'error');
             return redirect()->back();
@@ -130,9 +179,9 @@ class DataController extends Controller
             $transactions = Transaction::all();
             $places = Place_transcs::all();
 
-            return view('pages.admin.all-data.insert',compact('transactions','places','app','totalActiveTrans'));
+            return view('pages.admin.all-data.insert', compact('transactions', 'places', 'app', 'totalActiveTrans'));
         } catch (\Exception $e) {
-            Alert::toast($e->getMessage(),'error');
+            Alert::toast($e->getMessage(), 'error');
             return redirect()->back();
         }
     }
