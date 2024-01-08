@@ -26,7 +26,6 @@ class DataController extends Controller
     public function export(Request $request)
     {
         try {
-            // dd($request->all());
             if ($request->typeTrans !== "null" && $request->offices !== "null") {
                 $date = $request->input('date');
                 $officeName = DB::table('offices')->select('name')->where('id', $request->offices)->first();
