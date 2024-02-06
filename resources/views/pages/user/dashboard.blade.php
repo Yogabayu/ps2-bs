@@ -328,7 +328,7 @@
         var waktuMulai = null;
         var waktuSelesai = null;
         let mediaRecorder;
-        const recordedChunks = [];
+        let recordedChunks = [];
 
         function setWaktu(jenis) {
             var waktu = new Date();
@@ -529,7 +529,8 @@
                     hideLoadingIndicator();
                 });
 
-            recordedChunks =[];
+            recordedChunks = [];
+            hideLoadingIndicator();
         }
     </script>
 

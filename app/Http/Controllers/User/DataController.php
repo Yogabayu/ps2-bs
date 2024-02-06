@@ -162,11 +162,11 @@ class DataController extends Controller
                 'success' => true,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            // return response()->json([
-            //     'message' => $e->getMessage(),
-            //     'success' => false,
-            // ]);
+            // dd($e->getMessage());
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false,
+            ]);
         }
     }
 
