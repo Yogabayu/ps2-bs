@@ -5,6 +5,37 @@
 @push('style')
     <link rel="stylesheet" href="{{ asset('stisla/library/jqvmap/dist/jqvmap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/library/summernote/dist/summernote-bs4.min.css') }}">
+    <style>
+        .loading-indicator {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            /* Set a high z-index to ensure it appears on top */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 @endpush
 
 @section('main')
@@ -14,6 +45,10 @@
                 <h1>Dashboard</h1>
             </div>
             <div class="section-body">
+                <div id="loadingIndicator" class="loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Loading...</p>
+                </div>
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <form id="waktuForm">
@@ -23,6 +58,9 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
+                                    <div class="form-group col-md-6 col-12" style="display: none">
+                                        <video id="video" controls></video>
+                                    </div>
                                     <div class="form-group col-md-6 col-12">
                                         <label>Waktu Mulai: </label>
                                         <div class="input-group mb-3">
@@ -278,10 +316,19 @@
 
     {{-- main script  --}}
     <script>
+        function showLoadingIndicator() {
+            document.getElementById("loadingIndicator").style.display = "flex";
+        }
+
+        function hideLoadingIndicator() {
+            document.getElementById("loadingIndicator").style.display = "none";
+        }
+    </script>
+    <script>
         var waktuMulai = null;
         var waktuSelesai = null;
         let mediaRecorder;
-        let recordedChunks = [];
+        const recordedChunks = [];
 
         function setWaktu(jenis) {
             var waktu = new Date();
@@ -307,7 +354,11 @@
                     video: true
                 })
                 .then(function(stream) {
-                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder = new MediaRecorder(stream, {
+                        audioBitsPerSecond: 128000,
+                        videoBitsPerSecond: 2500000,
+                        mimeType: "video/webm",
+                    });
 
                     mediaRecorder.ondataavailable = function(event) {
                         if (event.data.size > 0) {
@@ -316,13 +367,7 @@
                     };
 
                     mediaRecorder.onstop = function() {
-                        var blob = new Blob(recordedChunks, {
-                            type: "video/webm"
-                        });
-                        var videoUrl = URL.createObjectURL(blob);
-                        document.getElementById("video").src = videoUrl;
-
-                        recordedChunks = [];
+                        mediaRecorder.stop();
                     };
 
                     mediaRecorder.start();
@@ -438,6 +483,7 @@
             formData.append("isActive", isActive);
             formData.append("_token", "{{ csrf_token() }}");
             formData.append("evidence_file", blob, "rekaman.webm");
+            showLoadingIndicator();
 
             fetch("{{ route('u-data.store') }}", {
                     method: "POST",
@@ -450,7 +496,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data.message);
+                    // console.log(data.message);
 
                     if (data.success) {
                         Swal.fire({
@@ -461,6 +507,7 @@
 
                         // Reset formulir
                         document.getElementById("waktuForm").reset();
+                        hideLoadingIndicator();
                         return;
                     } else {
                         Swal.fire({
@@ -468,17 +515,21 @@
                             text: data.message,
                             icon: "error"
                         });
+                        hideLoadingIndicator();
                     }
                 })
                 .catch(error => {
-                    // if (data.success == false) {
-                    Swal.fire({
-                        title: "Error!",
-                        text: error.message,
-                        icon: "error"
-                    });
-                    // }
+                    if (data.success == false) {
+                        Swal.fire({
+                            title: "Error!",
+                            text: error.message,
+                            icon: "error"
+                        });
+                    }
+                    hideLoadingIndicator();
                 });
+
+            recordedChunks =[];
         }
     </script>
 

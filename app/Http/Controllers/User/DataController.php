@@ -116,7 +116,7 @@ class DataController extends Controller
      */
     public function store(UserRequest $request)
     {
-        try {          
+        try {
             //calculate result
             $startDateTime = Carbon::parse($request->date . ' ' . $request->start);
             $endDateTime = Carbon::parse($request->date . ' ' . $request->end);
@@ -162,10 +162,11 @@ class DataController extends Controller
                 'success' => true,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'success' => false,
-            ]);
+            dd($e->getMessage());
+            // return response()->json([
+            //     'message' => $e->getMessage(),
+            //     'success' => false,
+            // ]);
         }
     }
 
