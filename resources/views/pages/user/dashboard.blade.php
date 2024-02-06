@@ -40,15 +40,16 @@
 
 @section('main')
     <div class="main-content">
+        <div id="loadingIndicator" class="loading-indicator">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
         <section class="section">
             <div class="section-header">
                 <h1>Dashboard</h1>
             </div>
             <div class="section-body">
-                <div id="loadingIndicator" class="loading-indicator">
-                    <div class="spinner"></div>
-                    <p>Loading...</p>
-                </div>
+                
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <form id="waktuForm">
