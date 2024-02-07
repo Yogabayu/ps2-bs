@@ -22,8 +22,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class DataController extends Controller
 {
-
-
     public function export(Request $request)
     {
         try {
@@ -51,7 +49,7 @@ class DataController extends Controller
                 ->orderBy('d.id', 'desc');
 
             $data = $query->get();
-            // dd($data);
+            dd($data);
             $filename = 'semua data ' . Carbon::now()->format('Y-m-d');
 
             UserActivity::create([
