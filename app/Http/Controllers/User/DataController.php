@@ -25,42 +25,48 @@ class DataController extends Controller
     public function export(Request $request)
     {
         try {
-            $query = DB::table('subordinates as s')
-                ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->join('datas as d', 'u.uuid', '=', 'd.user_uuid')
-                ->join('transactions as t', 't.id', '=', 'd.transc_id')
-                ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
-                ->join('positions as p', 'p.id', '=', 'u.position_id')
-                ->join('offices as o', 'o.id', '=', 'u.office_id')
-                ->select(
-                    'd.*',
-                    'u.name as username',
-                    'p.name as positionName',
-                    'o.name as officeName',
-                    't.code as transactionCode',
-                    't.name as transactionName',
-                    't.max_time as transactionMaxTime',
-                    'pt.name as ptName',
-                    DB::raw('MONTH(d.date) as blnTransaksi'),
-                    DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, d.start, d.end)) as lamaTransaksi'),
-                    DB::raw('CASE WHEN d.result = 1 THEN "Sesuai" ELSE "Tidak Sesuai" END as timeline'),
-                )
-                ->where('d.user_uuid', Auth::user()->uuid)
-                ->orderBy('d.id', 'desc');
+            $cekSubordinates = DB::table('subordinates')->where('subordinate_uuid', Auth::user()->uuid)->count();
+            if ($cekSubordinates > 0) {
+                $query = DB::table('subordinates as s')
+                    ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                    ->join('datas as d', 'u.uuid', '=', 'd.user_uuid')
+                    ->join('transactions as t', 't.id', '=', 'd.transc_id')
+                    ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
+                    ->join('positions as p', 'p.id', '=', 'u.position_id')
+                    ->join('offices as o', 'o.id', '=', 'u.office_id')
+                    ->select(
+                        'd.*',
+                        'u.name as username',
+                        'p.name as positionName',
+                        'o.name as officeName',
+                        't.code as transactionCode',
+                        't.name as transactionName',
+                        't.max_time as transactionMaxTime',
+                        'pt.name as ptName',
+                        DB::raw('MONTH(d.date) as blnTransaksi'),
+                        DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, d.start, d.end)) as lamaTransaksi'),
+                        DB::raw('CASE WHEN d.result = 1 THEN "Sesuai" ELSE "Tidak Sesuai" END as timeline'),
+                    )
+                    ->where('d.user_uuid', Auth::user()->uuid)
+                    ->orderBy('d.id', 'desc');
 
-            $data = $query->get();
-            $filename = 'semua data ' . Carbon::now()->format('Y-m-d');
+                $data = $query->get();
+                $filename = 'semua data ' . Carbon::now()->format('Y-m-d');
 
-            UserActivity::create([
-                'user_uuid' => Auth::user()->uuid,
-                'activity' => 'Melakukan export ' . ($request->type == 1 ? 'excel' : 'pdf') . ': ' . $filename,
-            ]);
+                UserActivity::create([
+                    'user_uuid' => Auth::user()->uuid,
+                    'activity' => 'Melakukan export ' . ($request->type == 1 ? 'excel' : 'pdf') . ': ' . $filename,
+                ]);
 
-            if ($request->type == 1) {
-                return Excel::download(new DatasExport($data), $filename . '.xlsx');
+                if ($request->type == 1) {
+                    return Excel::download(new DatasExport($data), $filename . '.xlsx');
+                } else {
+                    $pdf = Pdf::loadView('pages.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
+                    return $pdf->download($filename . '.pdf');
+                }
             } else {
-                $pdf = Pdf::loadView('pages.export.exportAll', ['data' => $data])->setPaper('legal', 'landscape');
-                return $pdf->download($filename . '.pdf');
+                Alert::error('User belum mempunyai SPV, Silahkan hubungi administrator', 'error');
+                return redirect()->back();
             }
         } catch (\Exception $e) {
             Alert::error($e->getMessage(), 'error');
