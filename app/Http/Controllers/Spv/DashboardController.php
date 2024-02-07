@@ -27,9 +27,9 @@ class DashboardController extends Controller
             $app = Setting::first();
             $totalActiveTrans = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->where('u.isActive','=',1)
-                ->where('u.position_id','!=',1)
-                ->where('u.position_id','!=',2)
+                ->where('u.isActive', '=', 1)
+                ->where('u.position_id', '!=', 1)
+                ->where('u.position_id', '!=', 2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
 
@@ -60,6 +60,8 @@ class DashboardController extends Controller
                 ->whereMonth('d.date', $month)
                 ->count();
 
+            $transactions = Transaction::all();
+            $places = Place_transcs::all();
             //untuk grafik1
             $filter = $request->filter;
 
@@ -75,7 +77,7 @@ class DashboardController extends Controller
                     ->groupBy('unit')
                     ->get();
             } else {
-                    $dataGrafikChart = DB::table('subordinates as s')
+                $dataGrafikChart = DB::table('subordinates as s')
                     ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
                     ->join('datas as d', 'u.uuid', '=', 'd.user_uuid')
                     ->where('s.supervisor_id', Auth::user()->uuid)
@@ -117,6 +119,8 @@ class DashboardController extends Controller
                 "dataGrafikChart",
                 "dataGrafikChartPie",
                 "filter",
+                "transactions",
+                "places",
             ));
         } catch (\Exception $e) {
             Alert::toast('Error : ' . $e->getMessage(), 'error');

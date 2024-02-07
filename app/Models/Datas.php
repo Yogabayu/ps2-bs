@@ -10,7 +10,7 @@ class Datas extends Model
     use HasFactory;
     protected $table = "datas";
     protected $fillable = [
-        'user_uuid', 'transc_id', 'place_transc_id', 'date', 'start', 'end', 'evidence_file', 'no_rek', 'result', 'isActive'
+        'user_uuid', 'transc_id', 'place_transc_id', 'date', 'start', 'end', 'evidence_file', 'no_rek', 'result', 'isActive,note'
     ];
 
     public function user()
@@ -20,10 +20,10 @@ class Datas extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class,'transc_id');
+        return $this->belongsTo(Transaction::class, 'transc_id');
     }
     public function placeTransc()
     {
-        return $this->belongsTo(Place_transcs::class,'place_transc_id');
+        return $this->belongsTo(Place_transcs::class, 'place_transc_id');
     }
 }

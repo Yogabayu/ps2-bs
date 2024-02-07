@@ -16,11 +16,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class DataController extends Controller
 {
+
+
     public function export(Request $request)
     {
         try {
@@ -134,20 +137,34 @@ class DataController extends Controller
             $data->date             = $request->date;
             $data->start            = $request->start;
             $data->end              = $request->end;
-            $data->no_rek    = $request->no_rek;
+            $data->no_rek           = $request->no_rek;
             $data->isActive         = 0;
 
             //upload file
-            $imageEXT = $request->file('evidence_file')->getClientOriginalName();
-            $filename = pathinfo($imageEXT, PATHINFO_FILENAME);
-            $EXT = $request->file('evidence_file')->getClientOriginalExtension();
-            $fileimage = $filename . '_' . time() . '.' . $EXT;
-            $path = $request->file('evidence_file')->move(public_path('file/datas'), $fileimage);
+            $imageEXT           = $request->file('evidence_file')->getClientOriginalName();
+            $filename           = pathinfo($imageEXT, PATHINFO_FILENAME);
+            $EXT                = $request->file('evidence_file')->getClientOriginalExtension();
+            $fileimage          = $filename . '_' . time() . '.' . $EXT;
+            $path               = $request->file('evidence_file')->move(public_path('file/datas'), $fileimage);
             $data->evidence_file = $fileimage;
 
             //calculate result
             if ($timeDifferenceInSeconds > $maxTimeInSeconds) {
                 $data->result = 0;
+                $users = DB::table('users as u')
+                    ->join('offices as o', 'u.office_id', '=', 'o.id')
+                    ->join('subordinates as s', 'o.supervisor_uuid', '=', 's.supervisor_id')
+                    ->where('s.subordinate_uuid', $request->user_uuid)
+                    ->where(function ($query) {
+                        $query->where('u.position_id', 2)
+                            ->orWhere('u.position_id', 1);
+                    })
+                    ->get();
+                $detailOutUser = User::where('uuid', $request->user_uuid)->first();
+                $detailRek = $request->no_rek;
+                $detailDate = now();
+
+                $this->sendToSPV($users, $detailOutUser, $detailRek, $detailDate);
             } else {
                 $data->result = 1;
             }
@@ -162,13 +179,24 @@ class DataController extends Controller
                 'success' => true,
             ]);
         } catch (\Exception $e) {
-            // dd($e->getMessage());
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false,
             ]);
         }
     }
+
+    private function sendToSPV($spvs, $detailOutUser, $detailRek, $detailDate)
+    {
+        foreach ($spvs as $spv) {
+            Mail::send('pages.email.notif', ['spv' => $spv, 'detailOutUser' => $detailOutUser, 'detailRek' => $detailRek, 'detailDate' => $detailDate], function ($message) use ($spv) {
+                $message->from('cepatcatat@bankarthaya.com', 'Administrator');
+                $message->to($spv->email, 'Admin');
+                $message->subject('Notifikasi Email');
+            });
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.

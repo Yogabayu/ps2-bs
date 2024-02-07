@@ -40,16 +40,15 @@
 
 @section('main')
     <div class="main-content">
-        <div id="loadingIndicator" class="loading-indicator">
-            <div class="spinner"></div>
-            <p>Loading...</p>
-        </div>
         <section class="section">
             <div class="section-header">
                 <h1>Dashboard</h1>
             </div>
             <div class="section-body">
-                
+                <div id="loadingIndicator" class="loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Loading...</p>
+                </div>
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <form id="waktuForm">
@@ -356,8 +355,8 @@
                 })
                 .then(function(stream) {
                     mediaRecorder = new MediaRecorder(stream, {
-                        audioBitsPerSecond: 128000,
-                        videoBitsPerSecond: 2500000,
+                        audioBitsPerSecond: 32000,
+                        videoBitsPerSecond: 500000,
                         mimeType: "video/webm",
                     });
 
@@ -494,6 +493,7 @@
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
+                    hideLoadingIndicator();
                     return response.json();
                 })
                 .then(data => {
@@ -520,7 +520,7 @@
                     }
                 })
                 .catch(error => {
-                    if (data.success == false) {
+                    if (!data.success) {
                         Swal.fire({
                             title: "Error!",
                             text: error.message,
@@ -531,7 +531,6 @@
                 });
 
             recordedChunks = [];
-            hideLoadingIndicator();
         }
     </script>
 

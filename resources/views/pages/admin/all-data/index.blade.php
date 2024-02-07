@@ -87,10 +87,14 @@
                                                     </td>
 
                                                     <td>
-                                                        <a class="btn btn-info btn-sm" title="Edit" data-toggle="modal"
+                                                        <a class="btn btn-info btn-sm" title="show" data-toggle="modal"
                                                             data-target="#detailModal{{ $data->id }}"
                                                             data-backdrop="false">
                                                             <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a class="btn btn-warning btn-sm" title="Edit" data-toggle="modal" data-target="#editModal{{ $data->id }}"
+                                                            data-backdrop="false">
+                                                            <i class="fas fa-pen"></i>
                                                         </a>
                                                         <button class="btn btn-danger btn-sm" title="Delete"
                                                             onclick="confirmDelete('{{ route('datas.destroy', $data->id) }}')">
@@ -100,6 +104,9 @@
                                                 </tr>
                                                 @include('pages.admin.all-data.modal.all-data-model', [
                                                     'dataId' => $data->id,
+                                                ])
+                                                @include('pages.admin.all-data.modal.edit-data-model', [
+                                                'dataId' => $data->id,
                                                 ])
                                             @endforeach
                                         </tbody>

@@ -59,7 +59,7 @@ class User extends Authenticatable
 
     public function data()
     {
-        return $this->hasMany(Data::class, 'user_uuid', 'uuid');
+        return $this->hasMany(Datas::class, 'user_uuid', 'uuid');
     }
 
     public function sso()

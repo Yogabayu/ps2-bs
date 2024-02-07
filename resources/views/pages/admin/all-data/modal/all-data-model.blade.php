@@ -128,6 +128,18 @@
                                             value="{{ $data->placeTransc->name }}" readonly>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label>Note</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-note"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ $data->note }}" readonly>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

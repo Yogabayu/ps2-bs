@@ -199,19 +199,34 @@ class AllDataController extends Controller
                 ->where('u.position_id', '!=', 2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
-            $datas = DB::table('subordinates as s')
-                ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->join('positions as p', 'p.id', '=', 'u.position_id')
-                ->join('offices as o', 'o.id', '=', 'u.office_id')
-                ->join('datas as d', 'd.user_uuid', '=', 'u.uuid')
-                ->join('transactions as t', 't.id', '=', 'd.transc_id')
-                ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
-                ->where('s.supervisor_id', Auth::user()->uuid)
-                ->select('d.*', 'u.name as username', 'p.name as namePosition', 'o.name as nameOffice', 'o.code as codeOffice', 't.code as codeTransaction', 't.name as nameTransaction', 't.max_time as maxTimeTrans', 'pt.code as ptcode', 'pt.name as ptname')
-                ->orderBy('d.created_at', 'desc')
-                ->distinct()
-                ->get();
+            if (auth()->user()->position_id == 2 && (auth()->user()->office_id == 3 || auth()->user()->office_id == 4)) {
+                $datas = DB::table('users as u')
+                    ->join('positions as p', 'p.id', '=', 'u.position_id')
+                    ->join('offices as o', 'o.id', '=', 'u.office_id')
+                    ->join('datas as d', 'd.user_uuid', '=', 'u.uuid')
+                    ->join('transactions as t', 't.id', '=', 'd.transc_id')
+                    ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
+                    ->where('d.user_uuid', Auth::user()->uuid)
+                    ->select('d.*', 'u.name as username', 'p.name as namePosition', 'o.name as nameOffice', 'o.code as codeOffice', 't.code as codeTransaction', 't.name as nameTransaction', 't.max_time as maxTimeTrans', 'pt.code as ptcode', 'pt.name as ptname')
+                    ->orderBy('d.created_at', 'desc')
+                    ->distinct()
+                    ->get();
+            } else {
+                $datas = DB::table('subordinates as s')
+                    ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
+                    ->join('positions as p', 'p.id', '=', 'u.position_id')
+                    ->join('offices as o', 'o.id', '=', 'u.office_id')
+                    ->join('datas as d', 'd.user_uuid', '=', 'u.uuid')
+                    ->join('transactions as t', 't.id', '=', 'd.transc_id')
+                    ->join('place_transcs as pt', 'pt.id', '=', 'd.place_transc_id')
+                    ->where('s.supervisor_id', Auth::user()->uuid)
+                    ->select('d.*', 'u.name as username', 'p.name as namePosition', 'o.name as nameOffice', 'o.code as codeOffice', 't.code as codeTransaction', 't.name as nameTransaction', 't.max_time as maxTimeTrans', 'pt.code as ptcode', 'pt.name as ptname')
+                    ->orderBy('d.created_at', 'desc')
+                    ->distinct()
+                    ->get();
+            }
 
+            // dd($datas);
             $typeTrans = DB::table('transactions')->select('id', 'name', 'position_id', 'code')->get();
             $offices = DB::table('offices')->select('id', 'code', 'name')->get();
             return view('pages.spv.all-data.index', compact('app', 'totalActiveTrans', 'datas', "typeTrans", "offices"));

@@ -23,6 +23,19 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class DataController extends Controller
 {
+    public function addNote(Request $request)
+    {
+        try {
+            // dd($request->all());
+            $data = Datas::where('id', $request->id)->first();
+            $data->note = $request->note;
+            $data->save();
+            Alert::toast('data berhasil disimpan', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
     public function export(Request $request)
     {
         try {
