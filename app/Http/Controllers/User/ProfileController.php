@@ -24,7 +24,7 @@ class ProfileController extends Controller
             $app = Setting::first();
             $totalActiveTrans = User::where('isActive', 1)->count();
 
-            return view('pages.user.profile', compact('profile', 'app','totalActiveTrans'));
+            return view('pages.user.profile', compact('profile', 'app', 'totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::toast($e->getMessage(), 'success');
             return redirect()->back();
@@ -39,7 +39,6 @@ class ProfileController extends Controller
             $request->validate([
                 'photo' => 'mimes:jpeg,jpg,png|max:2048',
             ]);
-            // dd($request->all());
             $user = User::where('uuid', $uuid)->first();
             $user->nik = $request->nik;
             $user->name = $request->name;
@@ -74,5 +73,4 @@ class ProfileController extends Controller
             return redirect()->back();
         }
     }
-
 }

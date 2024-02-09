@@ -25,13 +25,13 @@ class ProfileController extends Controller
             $app = Setting::first();
             $totalActiveTrans = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->where('u.isActive','=',1)
-                ->where('u.position_id','!=',1)
-                ->where('u.position_id','!=',2)
+                ->where('u.isActive', '=', 1)
+                ->where('u.position_id', '!=', 1)
+                ->where('u.position_id', '!=', 2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
 
-            return view('pages.spv.profile', compact('profile', 'app','totalActiveTrans'));
+            return view('pages.spv.profile', compact('profile', 'app', 'totalActiveTrans'));
         } catch (\Exception $e) {
             Alert::toast($e->getMessage(), 'success');
             return redirect()->back();
@@ -79,7 +79,6 @@ class ProfileController extends Controller
             $request->validate([
                 'photo' => 'mimes:jpeg,jpg,png|max:2048',
             ]);
-            // dd($request->all());
             $user = User::where('uuid', $uuid)->first();
             $user->nik = $request->nik;
             $user->name = $request->name;

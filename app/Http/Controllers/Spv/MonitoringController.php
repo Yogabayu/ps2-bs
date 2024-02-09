@@ -20,13 +20,13 @@ class MonitoringController extends Controller
     {
         try {
             $app = Setting::first();
-            
+
             $today = Carbon::today();
             $totalActiveTrans = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->where('u.isActive','=',1)
-                ->where('u.position_id','!=',1)
-                ->where('u.position_id','!=',2)
+                ->where('u.isActive', '=', 1)
+                ->where('u.position_id', '!=', 1)
+                ->where('u.position_id', '!=', 2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
             $userActives = DB::table('subordinates as s')
@@ -56,9 +56,9 @@ class MonitoringController extends Controller
             $app = Setting::first();
             $totalActiveTrans = DB::table('subordinates as s')
                 ->join('users as u', 's.subordinate_uuid', '=', 'u.uuid')
-                ->where('u.isActive','=',1)
-                ->where('u.position_id','!=',1)
-                ->where('u.position_id','!=',2)
+                ->where('u.isActive', '=', 1)
+                ->where('u.position_id', '!=', 1)
+                ->where('u.position_id', '!=', 2)
                 ->where('s.supervisor_id', Auth::user()->uuid)
                 ->count();
             $data = DB::table('datas')
@@ -67,19 +67,18 @@ class MonitoringController extends Controller
                 ->join('place_transcs', 'place_transcs.id', '=', 'datas.place_transc_id')
                 ->where('datas.user_uuid', $request->last_uuid)
                 ->select(
-                    'datas.*', 
-                    'users.name as username', 
-                    'transactions.name as transname', 
-                    'transactions.code as transcode', 
-                    'transactions.max_time as transMaxTime', 
-                    'place_transcs.name as placename', 
+                    'datas.*',
+                    'users.name as username',
+                    'transactions.name as transname',
+                    'transactions.code as transcode',
+                    'transactions.max_time as transMaxTime',
+                    'place_transcs.name as placename',
                     'place_transcs.code as placecode',
                     DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, datas.start, datas.end)) as lamaTransaksi'),
                 )
                 ->orderBy('created_at', 'desc')
                 ->first();
-            
-            // dd($data);
+
 
             if ($data) {
                 return view('pages.spv.monitoring.detail', compact('data', 'app', 'totalActiveTrans'));
@@ -92,5 +91,4 @@ class MonitoringController extends Controller
             return redirect()->back();
         }
     }
-
 }

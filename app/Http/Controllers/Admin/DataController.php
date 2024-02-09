@@ -26,14 +26,14 @@ class DataController extends Controller
     public function addNote(Request $request)
     {
         try {
-            // dd($request->all());
             $data = Datas::where('id', $request->id)->first();
             $data->note = $request->note;
             $data->save();
             Alert::toast('data berhasil disimpan', 'success');
             return redirect()->back();
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            Alert::toast($e->getMessage(), 'error');
+            return redirect()->back();
         }
     }
     public function export(Request $request)
@@ -149,7 +149,6 @@ class DataController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
             Alert::toast($e->getMessage(), 'error');
             return redirect()->back();
         }

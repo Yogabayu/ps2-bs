@@ -9,12 +9,12 @@ class DatasExport implements FromView
 {
     protected $data;
 
-    public function __construct($data) {
+    public function __construct($data)
+    {
         $this->data = $data;
     }
     public function view(): View
     {
-        // dd($this->data);
-        return view('pages.export.exportAll',["data"=>$this->data]);
+        return view('pages.export.exportAll', ["data" => $this->data]);
     }
 }

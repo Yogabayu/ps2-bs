@@ -302,7 +302,6 @@ class AllDataController extends Controller
                     ->get();
             }
 
-            // dd($datas);
             $typeTrans = DB::table('transactions')->select('id', 'name', 'position_id', 'code')->get();
             if (auth()->user()->position_id == 1) {
                 $offices = DB::table('offices')->select('id', 'code', 'name')->get();
@@ -316,7 +315,6 @@ class AllDataController extends Controller
             }
             return view('pages.spv.all-data.index', compact('app', 'totalActiveTrans', 'datas', "typeTrans", "offices"));
         } catch (\Exception $e) {
-            dd($e->getMessage());
             Alert::toast($e->getMessage(), 'error');
             return redirect()->back();
         }

@@ -15,7 +15,6 @@ class PartialExport implements FromView
     }
     public function view(): View
     {
-        // dd($this->data);
         return view('pages.export.exportPartial', ["data" => $this->data]);
     }
 }
