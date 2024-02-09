@@ -47,6 +47,7 @@
                 <th>Target Timerline</th>
                 <th>Hasil</th>
                 <th>File</th>
+                <th>Note dari SPV / Administrator</th>
             </tr>
         </thead>
         <tbody>
@@ -102,6 +103,9 @@
                     </td>
                     <td>
                         <a href="{{ url('file/datas/' . $d->evidence_file) }}" target="_blank"> disini </a>
+                    </td>
+                    <td>
+                        {{ $d->note }}
                     </td>
                 </tr>
             @endforeach
