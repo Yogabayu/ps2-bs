@@ -105,7 +105,7 @@
                         <a href="{{ url('file/datas/' . $d->evidence_file) }}" target="_blank"> disini </a>
                     </td>
                     <td>
-                        {{ $d->note }}
+                        {{ $d->note ?? '' }}
                     </td>
                 </tr>
             @endforeach
