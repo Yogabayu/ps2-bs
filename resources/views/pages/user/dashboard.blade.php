@@ -497,7 +497,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    // console.log(data.message);
+                    console.log(data.message);
 
                     if (data.success) {
                         Swal.fire({
@@ -520,13 +520,12 @@
                     }
                 })
                 .catch(error => {
-                    if (!data.success) {
-                        Swal.fire({
-                            title: "Error!",
-                            text: error.message,
-                            icon: "error"
-                        });
-                    }
+                    console.log(error);
+                    Swal.fire({
+                        title: "Error!",
+                        text: data.message,
+                        icon: "error"
+                    });
                     hideLoadingIndicator();
                 });
 
