@@ -366,9 +366,9 @@
                         }
                     };
 
-                    // mediaRecorder.onstop = function() {
+                    mediaRecorder.onstop = function() {
                     mediaRecorder.stop();
-                    // };
+                    };
 
                     mediaRecorder.start();
                 })
@@ -405,8 +405,12 @@
 
         function stopRecording() {
             // mediaRecorder.onstop = function() {
-            mediaRecorder.stop();
+            // mediaRecorder.stop();
             // };
+
+            mediaRecorder.onstop = function() {
+            mediaRecorder.stop();
+            };
 
             //update status
             var formUpdateData = new FormData();
@@ -464,8 +468,12 @@
             var isActive = 0;
             // Mendapatkan hasil rekaman video sebagai Blob
             // if (mediaRecorder && mediaRecorder.state === "recording") {
-            mediaRecorder.stop();
+            // mediaRecorder.stop();
             // }
+
+            // mediaRecorder.onstop = function() {
+            // mediaRecorder.stop();
+            // };
 
             // Membuat objek Blob dari recordedChunks
             var blob = new Blob(recordedChunks, {

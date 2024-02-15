@@ -123,7 +123,6 @@ class DataController extends Controller
     public function store(UserRequest $request)
     {
         try {
-            //calculate result
             $startDateTime = Carbon::parse($request->date . ' ' . $request->start);
             $endDateTime = Carbon::parse($request->date . ' ' . $request->end);
 
