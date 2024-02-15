@@ -506,6 +506,9 @@
                         // Reset formulir
                         document.getElementById("waktuForm").reset();
                         hideLoadingIndicator();
+                        setTimeout(() => {
+                        location.reload();
+                        }, 3000);
                         return;
                     } else {
                         Swal.fire({
@@ -514,6 +517,9 @@
                             icon: "error"
                         });
                         hideLoadingIndicator();
+                        setTimeout(() => {
+                        location.reload();
+                        }, 3000);
                     }
                 })
                 .catch(error => {
@@ -524,6 +530,10 @@
                         icon: "error"
                     });
                     hideLoadingIndicator();
+
+                    setTimeout(() => {
+                    location.reload();
+                    }, 3000);
                 });
 
             recordedChunks = [];
