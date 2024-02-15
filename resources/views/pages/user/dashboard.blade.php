@@ -74,21 +74,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6 col-12">
-                                        <label>Waktu Selesai</label>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button"
-                                                    onclick="setWaktu('selesai')">
-                                                    Tapout
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control" id="waktuSelesai"
-                                                placeholder="Waktu Selesai" readonly />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
                                             <label>Tanggal</label>
                                             <div class="input-group">
@@ -103,6 +88,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
                                             <label>Transaksi</label>
@@ -123,9 +110,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
                                             <label>Tempat Transaksi</label>
@@ -147,6 +131,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
+
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
                                             <label>No Rekening</label>
@@ -159,6 +147,19 @@
                                                 <input type="text" name="no_rek" id="no_rek" class="form-control"
                                                     placeholder="0" pattern="[0-9]*">
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 col-12">
+                                        <label>Waktu Selesai</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="button"
+                                                    onclick="setWaktu('selesai')">
+                                                    Tapout
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control" id="waktuSelesai"
+                                                placeholder="Waktu Selesai" readonly />
                                         </div>
                                     </div>
                                 </div>
@@ -325,6 +326,7 @@
         }
     </script>
     <script>
+        'use strict';
         var waktuMulai = null;
         var waktuSelesai = null;
         let mediaRecorder;
@@ -349,6 +351,10 @@
         }
 
         function startRecording() {
+            // mediaRecorder.onstop = function() {
+            // mediaRecorder.stop();
+            // };
+
             navigator.mediaDevices
                 .getDisplayMedia({
                     video: true
@@ -359,17 +365,13 @@
                         videoBitsPerSecond: 500000,
                         mimeType: "video/webm",
                     });
+                    mediaRecorder.stop();
 
                     mediaRecorder.ondataavailable = function(event) {
                         if (event.data.size > 0) {
                             recordedChunks.push(event.data);
                         }
                     };
-
-                    mediaRecorder.onstop = function() {
-                    mediaRecorder.stop();
-                    };
-
                     mediaRecorder.start();
                 })
                 .catch(function(error) {
@@ -405,12 +407,8 @@
 
         function stopRecording() {
             // mediaRecorder.onstop = function() {
-            // mediaRecorder.stop();
-            // };
-
-            mediaRecorder.onstop = function() {
             mediaRecorder.stop();
-            };
+            // };
 
             //update status
             var formUpdateData = new FormData();
@@ -466,18 +464,9 @@
             var end = waktuSelesai;
             var no_rek = document.getElementById("no_rek").value;
             var isActive = 0;
-            // Mendapatkan hasil rekaman video sebagai Blob
-            // if (mediaRecorder && mediaRecorder.state === "recording") {
-            // mediaRecorder.stop();
-            // }
 
-            // mediaRecorder.onstop = function() {
-            // mediaRecorder.stop();
-            // };
-
-            // Membuat objek Blob dari recordedChunks
             var blob = new Blob(recordedChunks, {
-                type: "video/webm"
+                type: 'vieo/webm'
             });
 
             var formData = new FormData();
