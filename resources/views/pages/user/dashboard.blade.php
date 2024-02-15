@@ -62,7 +62,7 @@
                                         <video id="video" controls></video>
                                     </div>
                                     <div class="form-group col-md-6 col-12">
-                                        <label>Waktu Mulai: </label>
+                                        <label for="waktuMulai">Waktu Mulai: </label>
                                         <div class="input-group mb-3">
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary" type="button" onclick="setWaktu('mulai')">
@@ -75,7 +75,7 @@
                                     </div>
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
-                                            <label>Tanggal</label>
+                                            <label for="date">Tanggal</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
@@ -92,7 +92,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
-                                            <label>Transaksi</label>
+                                            <label for="transc_id">Transaksi</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
-                                            <label>Tempat Transaksi</label>
+                                            <label for="place_transc_id">Tempat Transaksi</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
@@ -134,10 +134,9 @@
                                 </div>
 
                                 <div class="row">
-
                                     <div class="form-group col-md-6 col-12">
                                         <div class="form-group">
-                                            <label>No Rekening</label>
+                                            <label for="no_rek">No Rekening</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
@@ -150,7 +149,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6 col-12">
-                                        <label>Waktu Selesai</label>
+                                        <label for="waktuSelesai">Waktu Selesai</label>
                                         <div class="input-group mb-3">
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary" type="button"
@@ -507,7 +506,7 @@
                         document.getElementById("waktuForm").reset();
                         hideLoadingIndicator();
                         setTimeout(() => {
-                        location.reload();
+                            location.reload();
                         }, 3000);
                         return;
                     } else {
@@ -516,9 +515,10 @@
                             text: data.message,
                             icon: "error"
                         });
+                        document.getElementById("waktuForm").reset();
                         hideLoadingIndicator();
                         setTimeout(() => {
-                        location.reload();
+                            location.reload();
                         }, 3000);
                     }
                 })
@@ -529,13 +529,13 @@
                         text: data.message,
                         icon: "error"
                     });
+                    document.getElementById("waktuForm").reset();
                     hideLoadingIndicator();
 
                     setTimeout(() => {
-                    location.reload();
+                        location.reload();
                     }, 3000);
                 });
-
             recordedChunks = [];
         }
     </script>

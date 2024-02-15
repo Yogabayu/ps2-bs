@@ -131,7 +131,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="exportType">Select Export Type:</label>
+                                <label for="type">Select Export Type:</label>
                                 <select class="form-control" name="type" id="type">
                                     <option value="1">Excel</option>
                                     <option value="2">PDF</option>
