@@ -16,7 +16,7 @@ class Authenticate extends Middleware
         if ($request->expectsJson()) {
             return null;
         } else {
-            Alert::toast('Ada kesalahan','error');
+            // Alert::toast('Ada kesalahan','error');
             return url('/');
         }
     }
