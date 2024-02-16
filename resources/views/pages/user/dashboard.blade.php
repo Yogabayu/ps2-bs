@@ -325,11 +325,11 @@
         }
     </script>
     <script>
-        'use strict';
         var waktuMulai = null;
         var waktuSelesai = null;
         let mediaRecorder;
         let recordedChunks = [];
+        var stubstream_codec = "video/webm;opus";
 
         function setWaktu(jenis) {
             var waktu = new Date();
@@ -359,12 +359,41 @@
                     video: true
                 })
                 .then(function(stream) {
-                    mediaRecorder = new MediaRecorder(stream, {
-                        audioBitsPerSecond: 32000,
-                        videoBitsPerSecond: 500000,
-                        mimeType: "video/webm",
-                    });
-                    mediaRecorder.stop();
+                    if (MediaRecorder.isTypeSupported("video/mp4;codecs=h264") === true) {
+                        stubstream_codec = "video/mp4;codecs=h264";
+                    }
+                    if (MediaRecorder.isTypeSupported("video/mp4;codecs=avc1") === true) {
+                        stubstream_codec = "video/mp4;codecs=avc1";
+                    }
+                    if (MediaRecorder.isTypeSupported("video/webm;codecs=av1,opus") === true) {
+                        stubstream_codec =
+                            "video/webm;codecs=av1,opus";
+                    }
+                    if (MediaRecorder.isTypeSupported("video/webm;codecs=avc1,opus") === true) {
+                        stubstream_codec =
+                            "video/webm;codecs=avc1,opus";
+                    }
+                    if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus") === true) {
+                        stubstream_codec =
+                            "video/webm;codecs=vp9,opus";
+                    }
+                    console.log(stubstream_codec);
+                    var options = {
+                        mimeType: stubstream_codec,
+                        bitsPerSecond: 100000
+                    };
+                    // mediaRecorder = new MediaRecorder(stream, {
+                    //     audioBitsPerSecond: 32000,
+                    //     videoBitsPerSecond: 500000,
+                    //     mimeType: "video/webm",
+                    // });
+                    try {
+                        mediaRecorder = new MediaRecorder(stream, options);
+                    } catch (e0) {
+                        console.log("Unable to create MediaRecorder with codec");
+                        return false;
+                    }
+                    // mediaRecorder.stop();
 
                     mediaRecorder.ondataavailable = function(event) {
                         if (event.data.size > 0) {
