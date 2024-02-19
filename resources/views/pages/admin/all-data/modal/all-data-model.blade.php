@@ -11,10 +11,14 @@
                     </div>
                     <div class="modal-body">
 
-                        <iframe src="{{ asset('file/datas/' . $data->evidence_file) }}" frameborder="0" width="100%"
-                            height="500"></iframe>
+                        {{-- <iframe src="{{ asset('file/datas/' . $data->evidence_file) }}" frameborder="0" width="100%"
+                            height="500"></iframe> --}}
                         <div class="card">
                             <div class="card-body">
+                                <div class="form-group">
+                                    <a href="{{ asset('file/datas/' . $data->evidence_file) }}" target="_blank" rel="noopener noreferrer"
+                                        class="btn btn-sm btn-primary form-control"> lihat video</a>
+                                </div>
                                 <div class="form-group">
                                     <label>User</label>
                                     <div class="input-group">
